@@ -308,10 +308,13 @@ onMounted(() => {
 })
 
 // 메타 태그 동적 업데이트
-watch([personality, ganjiInfo], () => {
-  if (personality.value && ganjiInfo.value) {
+watch([personality, ganjiInfo, ganjiId], () => {
+  if (personality.value && ganjiInfo.value && ganjiId.value) {
     const title = `${personality.value.title || ganjiInfo.value.coloredAnimal} - 일주 상세 정보 | Two Peas`
     const description = `${personality.value.title || ganjiInfo.value.coloredAnimal}의 상세한 성격 정보와 특징을 확인해보세요. ${personality.value.intro || ''}`
+    
+    // 해당 간지 이미지 URL 생성
+    const ganjiImageUrl = `https://twopeas.co.kr/ganji/${ganjiId.value}.png`
     
     document.title = title
     
@@ -332,8 +335,12 @@ watch([personality, ganjiInfo], () => {
     updateMetaTag('description', description)
     updateMetaTag('og:title', title, true)
     updateMetaTag('og:description', description, true)
+    updateMetaTag('og:image', ganjiImageUrl, true)
+    updateMetaTag('og:image:width', '1200', true)
+    updateMetaTag('og:image:height', '1200', true)
     updateMetaTag('twitter:title', title, true)
     updateMetaTag('twitter:description', description, true)
+    updateMetaTag('twitter:image', ganjiImageUrl, true)
     
     const currentUrl = window.location.href
     updateMetaTag('og:url', currentUrl, true)
