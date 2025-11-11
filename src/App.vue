@@ -7,7 +7,6 @@ const route = useRoute()
 // 구조화된 데이터 (JSON-LD) 추가
 onMounted(() => {
   const addStructuredData = () => {
-    // 기존 구조화된 데이터 제거
     const existingScript = document.querySelector('script[type="application/ld+json"]')
     if (existingScript) {
       existingScript.remove()
@@ -17,8 +16,15 @@ onMounted(() => {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'Two Peas',
-      description: '다양한 계산기와 심리테스트를 제공하는 Two Peas. 일주 동물 찾기, 만세력 계산 등 재미있고 유용한 도구들을 만나보세요.',
+      alternateName: 'Two Peas - 나의 일주 동물 찾기',
+      description: '생년월일을 입력하면 나만의 일주 동물을 찾아드립니다. 60가지 간지 동물 중 당신의 일주를 확인해보세요.',
       url: window.location.origin,
+      keywords: '일주 동물, 사주, 만세력, 간지, 60간지, 일주 찾기',
+      author: {
+        '@type': 'Organization',
+        name: 'Two Peas'
+      },
+      inLanguage: 'ko-KR',
       potentialAction: {
         '@type': 'SearchAction',
         target: {

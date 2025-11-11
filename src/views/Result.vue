@@ -89,6 +89,59 @@ onMounted(() => {
   } else {
     router.push('/')
   }
+  // OG 메타 태그 설정 (index.html과 동일)
+  const updateMetaTag = (name, content, isProperty = false) => {
+    const attribute = isProperty ? 'property' : 'name'
+    let element = document.querySelector(`meta[${attribute}="${name}"]`)
+    
+    if (!element) {
+      element = document.createElement('meta')
+      element.setAttribute(attribute, name)
+      document.head.appendChild(element)
+    }
+    
+    element.setAttribute('content', content)
+  }
+  
+  const pageUrl = 'https://twopeas.co.kr/'
+  const pageTitle = 'Two Peas - 나의 일주 동물 찾기'
+  const pageDescription = '생년월일을 입력하면 나만의 일주 동물을 찾아드립니다. 60가지 간지 동물 중 당신의 일주를 확인해보세요.'
+  const introImageUrl = 'https://twopeas.co.kr/intro.png'
+  
+  // 페이지 타이틀 설정
+  document.title = pageTitle
+  
+  // Primary Meta Tags
+  updateMetaTag('title', pageTitle)
+  updateMetaTag('description', pageDescription)
+  updateMetaTag('keywords', '일주 동물, 사주, 만세력, 간지, 60간지, 일주 찾기')
+  
+  // Open Graph / Facebook / 카카오톡
+  updateMetaTag('og:type', 'website', true)
+  updateMetaTag('og:url', pageUrl, true)
+  updateMetaTag('og:title', pageTitle, true)
+  updateMetaTag('og:description', pageDescription, true)
+  updateMetaTag('og:image', introImageUrl, true)
+  updateMetaTag('og:image:width', '1200', true)
+  updateMetaTag('og:image:height', '630', true)
+  updateMetaTag('og:locale', 'ko_KR', true)
+  updateMetaTag('og:site_name', 'Two Peas', true)
+  
+  // Twitter
+  updateMetaTag('twitter:card', 'summary_large_image', true)
+  updateMetaTag('twitter:url', pageUrl, true)
+  updateMetaTag('twitter:title', pageTitle, true)
+  updateMetaTag('twitter:description', pageDescription, true)
+  updateMetaTag('twitter:image', introImageUrl, true)
+  
+  // Canonical URL
+  let canonical = document.querySelector('link[rel="canonical"]')
+  if (!canonical) {
+    canonical = document.createElement('link')
+    canonical.setAttribute('rel', 'canonical')
+    document.head.appendChild(canonical)
+  }
+  canonical.setAttribute('href', pageUrl)
 })
 </script>
 
