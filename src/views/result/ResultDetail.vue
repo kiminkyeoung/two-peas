@@ -145,21 +145,12 @@ const shareResult = async () => {
   const currentUrl = window.location.href
   
   try {
-    // Web Share API 사용 (모바일에서 지원)
-    if (navigator.share) {
-      await navigator.share({
-        title: `${personality.value?.title || ganjiInfo.value?.coloredAnimal} - 나의 일주 동물`,
-        text: `${personality.value?.title || ganjiInfo.value?.coloredAnimal} 결과를 확인해보세요!`,
-        url: currentUrl
-      })
-    } else {
-      // 클립보드에 복사 (데스크톱)
-      await navigator.clipboard.writeText(currentUrl)
-      showCopyToast.value = true
-      setTimeout(() => {
-        showCopyToast.value = false
-      }, 2000)
-    }
+    // 클립보드에 URL 복사
+    await navigator.clipboard.writeText(currentUrl)
+    showCopyToast.value = true
+    setTimeout(() => {
+      showCopyToast.value = false
+    }, 2000)
   } catch (error) {
     // 클립보드 API가 실패하면 fallback 방법 사용
     try {
