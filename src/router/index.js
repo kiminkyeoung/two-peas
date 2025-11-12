@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Result from '../views/Result.vue'
 import ResultDetail from '../views/result/ResultDetail.vue'
+import CoworkerTxt from '../views/coworker/txt.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,7 +37,18 @@ const router = createRouter({
         description: '일주의 상세한 성격 정보와 특징을 확인해보세요.',
         keywords: '일주 상세, 간지 성격, 일주 분석'
       }
-    }
+    },
+    {
+      path: '/coworker/txt',
+      name: 'CoworkerTxt',
+      component: CoworkerTxt,
+      props: true,
+      meta: {
+        title: '내 업무 도우미 (TXT → CSV) - Two Peas',
+        description: 'TXT 파일을 CSV 파일로 변환해드립니다.',
+        keywords: 'TXT → CSV, 변환, 텍스트 파일, CSV 파일'
+      }
+    },
   ]
 })
 
