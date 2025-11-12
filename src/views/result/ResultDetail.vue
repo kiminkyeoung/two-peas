@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pubhtml'
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pub?output=csv'
 const router = useRouter()
 const route = useRoute()
 
@@ -173,11 +173,16 @@ const fetchPersonalityData = async () => {
   isLoadingData.value = true
   try {
     const response = await fetch(GOOGLE_SHEET_CSV_URL)
+    console.log(response);
+    
     if (!response.ok) {
         throw new Error('데이터 로드 실패: 구글 시트 URL을 확인해야 한다.')
     }
     const csvText = await response.text()
     
+    console.log(csvText);
+    
+
     // CSV 파싱 - 현재 간지 ID에 해당하는 데이터만 가져오기
     const lines = csvText.trim().split('\n').slice(1) // 헤더(첫 줄) 제외
     const targetNumber = ganjiId.value // 현재 간지 ID
