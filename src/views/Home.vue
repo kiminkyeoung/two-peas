@@ -54,7 +54,6 @@ const changeImage = () => {
 }
 
 const handleImageError = (event) => {
-  // 이미지 로드 실패 시 기본 이미지(1.png)로 변경
   event.target.src = new URL(`../assets/ganji/1.webp`, import.meta.url).href
 }
 
@@ -175,11 +174,6 @@ const handleSubmit = () => {
     const monthPillar = lunar.getMonthInGanZhi();
     const dayPillar = lunar.getDayInGanZhi();
     const timePillar = lunar.getTimeInGanZhi();
-
-    console.log("연주:", yearPillar);
-    console.log("월주:", monthPillar);
-    console.log("일주:", dayPillar);
-    console.log("시주:", timePillar);
 
     // ✅ 천간/지지 분리
     const heavenlyStem = dayPillar[0]; // 예: 丙
@@ -374,8 +368,7 @@ const handleSubmit = () => {
   right: -140px;
 }
 
-.hero,
-.hero-visual {
+.hero {
   position: relative;
   z-index: 1;
 }
@@ -385,26 +378,12 @@ const handleSubmit = () => {
   margin: 0 auto;
 }
 
-.hero__kicker {
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--color-main-pink);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
 .hero__title {
   font-size: clamp(2.4rem, 5vw, 3.6rem);
   line-height: 1.1;
   font-weight: 800;
   margin: 0 0 1rem;
   color: var(--color-text-primary);
-}
-
-.hero__title--accent {
-  display: block;
-  color: var(--color-main-pink);
 }
 
 .hero__subtitle {
@@ -548,55 +527,6 @@ const handleSubmit = () => {
 .cta-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 26px 40px rgba(255, 153, 164, 0.45);
-}
-
-.hero-visual {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-visual__card {
-  position: relative;
-  background: radial-gradient(circle at top, #fff4f8 0%, #ffffff 65%);
-  border-radius: 40px;
-  width: clamp(280px, 40vw, 420px);
-  aspect-ratio: 1;
-  box-shadow: 0 40px 80px rgba(54, 69, 79, 0.14);
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  padding: clamp(1.5rem, 4vw, 3rem);
-}
-
-.hero-visual__glow {
-  position: absolute;
-  inset: 15%;
-  background: radial-gradient(circle, rgba(255, 153, 164, 0.35) 0%, rgba(242, 231, 255, 0.15) 55%, rgba(255, 255, 255, 0) 100%);
-  filter: blur(4px);
-}
-
-.hero-visual__character {
-  width: 100%;
-  height: 100%;
-  max-width: 240px;
-  background: url('/character-tiger.png') center/contain no-repeat, linear-gradient(180deg, #ffe0e8 0%, #f2e7ff 100%);
-  border-radius: 32px;
-  box-shadow: inset 0 12px 30px rgba(255, 255, 255, 0.35);
-}
-
-.hero-visual__caption {
-  position: absolute;
-  bottom: clamp(1rem, 3vw, 1.75rem);
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(54, 69, 79, 0.8);
-  color: #ffffff;
-  padding: 0.55rem 1.5rem;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  box-shadow: 0 12px 30px rgba(54, 69, 79, 0.28);
 }
 
 @media (max-width: 768px) {

@@ -30,14 +30,6 @@ const branchToAnimal = {
   '申': '원숭이', '酉': '닭', '戌': '개', '亥': '돼지'
 }
 
-const colorToClass = {
-  '푸른': 'color-blue',
-  '빨간': 'color-red',
-  '노란': 'color-yellow',
-  '흰': 'color-white',
-  '검은': 'color-black'
-}
-
 // 일주별 성격 정보 (예시 데이터 - 실제로는 더 상세한 정보를 넣을 수 있습니다)
 const personalityData = {
   '甲子': {
@@ -76,14 +68,12 @@ const ganjiInfo = computed(() => {
   const color = stemToColor[heavenlyStem] || ''
   const animal = branchToAnimal[earthlyBranch] || '알 수 없음'
   const coloredAnimal = `${color}${animal}`
-  const colorClass = colorToClass[color] || ''
   
   return {
     ganji: currentGanji.value,
     color,
     animal,
     coloredAnimal,
-    colorClass,
     number: ganjiId.value
   }
 })
@@ -286,14 +276,10 @@ const fetchPersonalityData = async () => {
     
     if (foundData) {
         allPersonalityData.value = foundData
-        console.log(`[간지 ID: ${targetNumber}] 성격 데이터 로드 성공`, foundData)
-    } else {
-        console.warn(`간지 ID ${targetNumber}에 해당하는 데이터를 찾을 수 없습니다.`)
     }
 
   } catch (error) {
     errorMessage.value = `데이터 로드 오류: ${error.message}. (URL을 확인하거나 CSV가 올바른 형식인지 확인해야 한다.)`
-    console.error('데이터 로드 실패:', error)
   } finally {
     isLoadingData.value = false
   }
@@ -303,8 +289,7 @@ onMounted(() => {
   if (!ganjiId.value) {
     router.push('/result')
   }
-  console.log('ganjiId', ganjiId.value)
-  fetchPersonalityData(ganjiId.value)
+  fetchPersonalityData()
 })
 
 // 메타 태그 동적 업데이트
