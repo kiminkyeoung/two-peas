@@ -20,7 +20,7 @@ if (!fs.existsSync(resultDir)) {
 
 // 각 결과 페이지(1-60)에 대한 HTML 생성
 for (let i = 1; i <= 60; i++) {
-  const ganjiImageUrl = `https://twopeas.co.kr/ganji/${i}.png`
+  const ganjiImageUrl = `https://twopeas.co.kr/ganji/${i}.webp`
   const pageUrl = `https://twopeas.co.kr/result/${i}`
   
   // 메타 태그를 동적으로 교체 (더 정확한 정규식 사용)

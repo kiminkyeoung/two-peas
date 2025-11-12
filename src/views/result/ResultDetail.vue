@@ -129,16 +129,16 @@ const goHome = () => {
 const getImageUrl = (id) => {
   try {
     // Vite에서 동적 import 사용
-    return new URL(`../../assets/ganji/${id}.png`, import.meta.url).href
+    return new URL(`../../assets/ganji/${id}.webp`, import.meta.url).href
   } catch {
     // 실패 시 기본 이미지
-    return new URL(`../../assets/ganji/1.png`, import.meta.url).href
+    return new URL(`../../assets/ganji/1.webp`, import.meta.url).href
   }
 }
 
 const handleImageError = (event) => {
   // 이미지 로드 실패 시 기본 이미지 사용
-  event.target.src = new URL(`../../assets/ganji/1.png`, import.meta.url).href
+  event.target.src = new URL(`../../assets/ganji/1.webp`, import.meta.url).href
 }
 
 const shareResult = async () => {
@@ -314,7 +314,7 @@ watch([personality, ganjiInfo, ganjiId], () => {
     const description = `${personality.value.title || ganjiInfo.value.coloredAnimal}의 상세한 성격 정보와 특징을 확인해보세요. ${personality.value.intro || ''}`
     
     // 해당 간지 이미지 URL 생성
-    const ganjiImageUrl = `https://twopeas.co.kr/ganji/${ganjiId.value}.png`
+    const ganjiImageUrl = `https://twopeas.co.kr/ganji/${ganjiId.value}.webp`
     
     document.title = title
     

@@ -30,7 +30,7 @@ const isImageTransitioning = ref(false)
 let slideInterval = null
 
 const getImageUrl = (index) => {
-  return new URL(`../assets/ganji/${index}.png`, import.meta.url).href
+  return new URL(`../assets/ganji/${index}.webp`, import.meta.url).href
 }
 
 const getRandomImageIndex = () => {
@@ -55,7 +55,7 @@ const changeImage = () => {
 
 const handleImageError = (event) => {
   // 이미지 로드 실패 시 기본 이미지(1.png)로 변경
-  event.target.src = new URL(`../assets/ganji/1.png`, import.meta.url).href
+  event.target.src = new URL(`../assets/ganji/1.webp`, import.meta.url).href
 }
 
 onMounted(() => {
@@ -84,7 +84,7 @@ onMounted(() => {
   const pageUrl = 'https://twopeas.co.kr/'
   const pageTitle = 'Two Peas - 나의 일주 동물 찾기'
   const pageDescription = '생년월일을 입력하면 나만의 일주 동물을 찾아드립니다. 60가지 간지 동물 중 당신의 일주를 확인해보세요.'
-  const introImageUrl = 'https://twopeas.co.kr/intro.png'
+  const introImageUrl = 'https://twopeas.co.kr/intro.webp'
   
   // 페이지 타이틀 설정
   document.title = pageTitle
