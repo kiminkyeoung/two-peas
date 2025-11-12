@@ -2,8 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pub?gid=0&single=true&output=csv'
-
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pubhtml'
 const router = useRouter()
 const route = useRoute()
 
