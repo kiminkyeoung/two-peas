@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { setSeoMeta } from '../../utils/seo.js'
 
 const textContent = ref('')
 const fileName = ref('data.csv')
@@ -12,7 +13,6 @@ const ensureCsvExtension = (name) => {
 
 const downloadCsv = () => {
   const content = textContent.value ?? ''
-  // UTF-8 BOM for Excel compatibility (especially with Korean)
   const bom = '\uFEFF'
   const blob = new Blob([bom + content], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
@@ -25,6 +25,17 @@ const downloadCsv = () => {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
+
+// SEO 메타 태그 설정 (공통 함수 사용)
+onMounted(() => {
+  setSeoMeta({
+    title: 'TXT → CSV 변환 - Two Peas',
+    description: '텍스트(TXT)를 그대로 CSV 파일로 변환하여 다운로드하세요. UTF-8 BOM 추가로 엑셀 한글 깨짐 방지.',
+    keywords: 'TXT CSV 변환, CSV 다운로드, 텍스트 변환, 도구, Two Peas',
+    url: window.location.href,
+    imageUrl: 'https://twopeas.co.kr/coworker.webp',
+  })
+})
 </script>
 
 <template>
