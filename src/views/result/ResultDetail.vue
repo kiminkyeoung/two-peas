@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pub?output=csv'
+const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdfAUB2EQpQJLWSIhUnAD9wP5QycKQiFAoGqL9M7WWvc9UZAw1wNvvO2HhawM35rx4eI0QNIfmphWz/pub?gid=1398266343&single=true&output=csv'
 const router = useRouter()
 const route = useRoute()
 
@@ -19,7 +19,7 @@ const stemToColor = {
   '甲': '푸른', '乙': '푸른',
   '丙': '빨간', '丁': '빨간',
   '戊': '노란', '己': '노란',
-  '庚': '흰',   '辛': '흰',
+  '庚': '흰', '辛': '흰',
   '壬': '검은', '癸': '검은'
 }
 
@@ -61,13 +61,13 @@ const currentGanji = computed(() => {
 
 const ganjiInfo = computed(() => {
   if (!currentGanji.value) return null
-  
+
   const heavenlyStem = currentGanji.value[0]
   const earthlyBranch = currentGanji.value[1]
   const color = stemToColor[heavenlyStem] || ''
   const animal = branchToAnimal[earthlyBranch] || '알 수 없음'
   const coloredAnimal = `${color}${animal}`
-  
+
   return {
     ganji: currentGanji.value,
     color,
@@ -79,31 +79,53 @@ const ganjiInfo = computed(() => {
 
 const personality = computed(() => {
   if (!currentGanji.value) return null
-  
+
   // Google Sheets에서 가져온 데이터 우선 사용
   const sheetData = allPersonalityData.value[currentGanji.value]
+
   if (sheetData) {
     return {
-      title: sheetData.title || ganjiInfo.value?.coloredAnimal || '',
-      intro: sheetData.personality || '',
-      strengths: sheetData.strengths || [],
-      weaknesses: sheetData.weaknesses || [],
-      traits: sheetData.traits || [] // 성격 특성 4줄 (CSV에서 추가 컬럼으로 받아올 수 있음)
+      title: sheetData.ganjiName || ganjiInfo.value?.coloredAnimal || '',
+      keyword: sheetData.ganjiKeyword || '',
+      intro: sheetData.summary || sheetData.ganjiKeyword || '',
+      summary: sheetData.summary || '',
+      coreImageTitle: sheetData.coreImageTitle || '',
+      coreImageItems: sheetData.coreImageItems || [],
+      personalityFeatureTitle: sheetData.personalityFeatureTitle || '',
+      personalityFeatureItems: sheetData.personalityFeatureItems || [],
+      strengthTitle: sheetData.strengthTitle || '장점',
+      strengthItems: sheetData.strengthItems || [],
+      weaknessTitle: sheetData.weaknessTitle || '보완점',
+      weaknessItems: sheetData.weaknessItems || [],
+      careerTraitTitle: sheetData.careerTraitTitle || '',
+      careerTraitItems: sheetData.careerTraitItems || [],
+      loveTraitTitle: sheetData.loveTraitTitle || '',
+      loveTraitItems: sheetData.loveTraitItems || [],
+      wealthSenseTitle: sheetData.wealthSenseTitle || '',
+      wealthSenseItems: sheetData.wealthSenseItems || []
     }
   }
-  
+
   // 기본 데이터 사용
   return personalityData[currentGanji.value] || {
     title: ganjiInfo.value?.coloredAnimal || '',
+    keyword: '',
     intro: `${ganjiInfo.value?.coloredAnimal || ''}의 성격을 가진 사람입니다.`,
-    strengths: ['특성 1', '특성 2', '특성 3'],
-    weaknesses: ['개선점 1', '개선점 2'],
-    traits: [
-      '상세한 성격 정보는 추후 업데이트될 예정입니다.',
-      '추가 정보가 곧 제공될 예정입니다.',
-      '더 많은 정보를 확인하세요.',
-      '지속적으로 업데이트 중입니다.'
-    ]
+    summary: '',
+    coreImageTitle: '',
+    coreImageItems: [],
+    personalityFeatureTitle: '',
+    personalityFeatureItems: [],
+    strengthTitle: '장점',
+    strengthItems: [],
+    weaknessTitle: '보완점',
+    weaknessItems: [],
+    careerTraitTitle: '',
+    careerTraitItems: [],
+    loveTraitTitle: '',
+    loveTraitItems: [],
+    wealthSenseTitle: '',
+    wealthSenseItems: []
   }
 })
 
@@ -132,7 +154,7 @@ const handleImageError = (event) => {
 
 const shareResult = async () => {
   const currentUrl = window.location.href
-  
+
   try {
     // 클립보드에 URL 복사
     await navigator.clipboard.writeText(currentUrl)
@@ -151,7 +173,7 @@ const shareResult = async () => {
       textArea.select()
       document.execCommand('copy')
       document.body.removeChild(textArea)
-      
+
       showCopyToast.value = true
       setTimeout(() => {
         showCopyToast.value = false
@@ -169,117 +191,136 @@ const allPersonalityData = ref({}) // 스프레드시트에서 가져온 60개 �
 const errorMessage = ref('') // 에러 메시지
 const showCopyToast = ref(false) // 복사 성공 토스트 표시 여부
 
+// "키워드 : 설명" 묶음을 [{ keyword, description }] 배열로 변환
+const parseKeyDescPairs = (text) => {
+  console.log(text, 'text');
+  
+  if (!text) return []
+  
+  // 1. 먼저 줄바꿈(\n)을 기준으로 문장을 분리
+  // \r 제거 후 \n+ 기준으로 split
+  const lines = String(text).replace(/\r/g, '').split(/\n+/)
+  
+  const items = []
+  
+  for (const line of lines) {
+    const trimmedLine = line.trim()
+    if (!trimmedLine) continue
+    
+    // 2. 각 문장에서 콜론(: 또는 ：)을 기준으로 키워드와 설명을 분리
+    // 첫 번째 콜론만 찾아서 나눔 (설명 안에 콜론이 들어갈 수도 있으므로)
+    const sepIdx = trimmedLine.indexOf(':') !== -1 ? trimmedLine.indexOf(':') : trimmedLine.indexOf('：')
+    
+    if (sepIdx > -1) {
+      const keyword = trimmedLine.slice(0, sepIdx).trim()
+      const description = trimmedLine.slice(sepIdx + 1).trim()
+      if (keyword || description) {
+        items.push({ keyword, description })
+      }
+    } else {
+      // 콜론이 없는 경우 전체를 설명으로 처리 (키워드 없음)
+      items.push({ keyword: '', description: trimmedLine })
+    }
+  }
+  
+  return items
+}
+
 const fetchPersonalityData = async () => {
   isLoadingData.value = true
   try {
     const response = await fetch(GOOGLE_SHEET_CSV_URL)
-    console.log(response);
-    
+
     if (!response.ok) {
-        throw new Error('데이터 로드 실패: 구글 시트 URL을 확인해야 한다.')
+      throw new Error('데이터 로드 실패: 구글 시트 URL을 확인해야 한다.')
     }
     const csvText = await response.text()
-    
-    console.log(csvText);
-    
+
 
     // CSV 파싱 - 현재 간지 ID에 해당하는 데이터만 가져오기
-    const lines = csvText.trim().split('\n').slice(1) // 헤더(첫 줄) 제외
+    const allLines = csvText.trim().split(/\r?\n/);
+    const dataContent = allLines.slice(1).join('\n');
+    const lines = dataContent.trim().split(/\r?\n(?=\d+,)/);
     const targetNumber = ganjiId.value // 현재 간지 ID
-    
+
     // 현재 간지에 해당하는 라인만 찾기
     let foundData = null
-    
+
     for (const line of lines) {
-        // 정규식을 사용하여 쉼표로 분리하되, 따옴표 안의 쉼표는 무시한다.
-        const values = line.match(/(?:"[^"]*"|[^,])+/g).map(v => v.replace(/^"|"$/g, '').trim())
+      // 정규식을 사용하여 쉼표로 분리하되, 따옴표 안의 쉼표는 무시한다.
+      const values = line.match(/(?:"[^"]*"|[^,])+/g).map(v => v.replace(/^"|"$/g, '').trim())
+      for (let i = 0; i < values.length; i++) {
+        const val = values[i]
+        values[i] = val === "''" ? '' : val.replace(/^'|'$/g, '').trim()
+      }
 
-        // 스프레드시트 구조: number, ganji, title, personality, strengths, weaknesses, detail
-        if (values.length >= 7) {
-            const number = parseInt(values[0])
-            
-            // 현재 간지 ID와 일치하는 데이터만 처리
-            if (number === targetNumber && number >= 1 && number <= 60) {
-                const ganji = values[1]
+      
+      if (values.length >= 19) {
+        
+        const rawNumberField = (values[0] || '').toString().replace(/\ufeff/g, '')
+        const numMatch = rawNumberField.match(/\d+/)
+        const number = numMatch ? parseInt(numMatch[0], 10) : NaN
 
-                // strengths: "#뛰어난 리더십, #활발함, #사교성" 형태를 배열로 변환
-                const strengthsStr = values[4] || ''
-                const strengths = strengthsStr
-                    .split(',')
-                    .map(s => s.trim())
-                    .filter(s => s && s.startsWith('#'))
-                    .map(s => s.replace(/^#/, '')) // # 제거
-                
-                // weaknesses: "#성급함, #다혈질, #강한 고집" 형태를 배열로 변환
-                const weaknessesStr = values[5] || ''
-                const weaknesses = weaknessesStr
-                    .split(',')
-                    .map(w => w.trim())
-                    .filter(w => w && w.startsWith('#'))
-                    .map(w => w.replace(/^#/, '')) // # 제거
-                
-                // detail: 긴 문단을 문장 단위로 나눠서 4줄로 표시
-                const detailStr = values[6] || ''
-                
-                // 먼저 줄바꿈으로 분리 시도 (CSV에서 이미 줄바꿈으로 구분되어 있을 수 있음)
-                let detailSentences = []
-                
-                if (detailStr.includes('\n')) {
-                    // 줄바꿈이 있으면 줄바꿈으로 분리
-                    detailSentences = detailStr
-                        .split(/\n+/)
-                        .map(s => s.trim())
-                        .filter(s => s.length > 0)
-                } else {
-                    // 줄바꿈이 없으면 문장 구분자로 분리 (한국어 마침표 포함)
-                    detailSentences = detailStr
-                        .split(/[.!?。]\s*/) // 마침표 뒤 공백이 없어도 분리, 한국어 마침표 포함
-                        .map(s => s.trim())
-                        .filter(s => s.length > 0)
-                    
-                    // 문장이 하나만 있거나 너무 길면 적절히 나누기
-                    if (detailSentences.length === 1 && detailSentences[0].length > 100) {
-                        // 긴 문장을 쉼표나 공백으로 나누기
-                        const longSentence = detailSentences[0]
-                        const parts = longSentence.split(/[，.]\s*/) // 쉼표로 분리
-                        if (parts.length > 1) {
-                            detailSentences = parts.map(s => s.trim()).filter(s => s.length > 0)
-                        } else {
-                            // 쉼표가 없으면 적절한 길이로 나누기 (약 50자씩)
-                            const chunkSize = 50
-                            detailSentences = []
-                            for (let i = 0; i < longSentence.length; i += chunkSize) {
-                                const chunk = longSentence.slice(i, i + chunkSize).trim()
-                                if (chunk) detailSentences.push(chunk)
-                            }
-                        }
-                    }
-                }
-                
-                const traits = detailSentences.slice(0, 4)
-                
-                foundData = {
-                    [ganji]: {
-                        title: values[2] || '',
-                        personality: values[3] || '',
-                        strengths: strengths.length > 0 ? strengths : ['특성 1', '특성 2', '특성 3'],
-                        weaknesses: weaknesses.length > 0 ? weaknesses : ['개선점 1', '개선점 2'],
-                        traits: traits.length > 0 ? traits : [
-                            values[3] || '상세한 성격 정보가 곧 제공될 예정입니다.',
-                            '추가 정보를 확인하세요.',
-                            '지속적으로 업데이트 중입니다.',
-                            '더 많은 정보를 기대해주세요.'
-                        ]
-                    }
-                }
-                
-                break
+        // 현재 간지 ID와 일치하는 데이터만 처리
+        if (number === targetNumber && number >= 1 && number <= 60) {
+          const ganji = values[1]
+          const ganjiName = values[2] || ganji
+          const ganjiKeyword = values[3] || ''
+          const summary = values[4] || ''
+
+          const coreImageTitle = values[5] || ''
+          const coreImageDescription = values[6] || ''
+
+          const personalityFeatureTitle = values[7] || ''
+          const personalityFeatureDescription = values[8] || ''
+
+          const strengthTitle = values[9] || '장점'
+          const strengthDescription = values[10] || ''
+
+          const weaknessTitle = values[11] || '보완점'
+          const weaknessDescription = values[12] || ''
+
+          const careerTraitTitle = values[13] || ''
+          const careerTraitDescription = values[14] || ''
+
+          const loveTraitTitle = values[15] || ''
+          const loveTraitDescription = values[16] || ''
+
+          const wealthSenseTitle = values[17] || ''
+          const wealthSenseDescription = values[18] || ''
+
+          foundData = {
+            [ganji]: {
+              ganjiName,
+              ganjiKeyword,
+              summary,
+              coreImageTitle,
+              coreImageItems: parseKeyDescPairs(coreImageDescription),
+              personalityFeatureTitle,
+              personalityFeatureItems: parseKeyDescPairs(personalityFeatureDescription),
+              strengthTitle,
+              strengthItems: parseKeyDescPairs(strengthDescription),
+              weaknessTitle,
+              weaknessItems: parseKeyDescPairs(weaknessDescription),
+              careerTraitTitle,
+              careerTraitItems: parseKeyDescPairs(careerTraitDescription),
+              loveTraitTitle,
+              loveTraitItems: parseKeyDescPairs(loveTraitDescription),
+              wealthSenseTitle,
+              wealthSenseItems: parseKeyDescPairs(wealthSenseDescription),
+              // 하위 호환 필드
+              title: ganjiName,
+              intro: ganjiKeyword
             }
+          }
+
+          break
         }
+      }
     }
-    
+
     if (foundData) {
-        allPersonalityData.value = foundData
+      allPersonalityData.value = foundData
     }
 
   } catch (error) {
@@ -301,26 +342,26 @@ watch([personality, ganjiInfo, ganjiId], () => {
   if (personality.value && ganjiInfo.value && ganjiId.value) {
     const title = `${personality.value.title || ganjiInfo.value.coloredAnimal} - 일주 상세 정보 | Two Peas`
     const description = `${personality.value.title || ganjiInfo.value.coloredAnimal}의 상세한 성격 정보와 특징을 확인해보세요. ${personality.value.intro || ''}`
-    
+
     // 해당 간지 이미지 URL 생성
     const ganjiImageUrl = `https://twopeas.co.kr/ganji/${ganjiId.value}.webp`
-    
+
     document.title = title
-    
+
     // 메타 태그 업데이트
     const updateMetaTag = (name, content, isProperty = false) => {
       const attribute = isProperty ? 'property' : 'name'
       let element = document.querySelector(`meta[${attribute}="${name}"]`)
-      
+
       if (!element) {
         element = document.createElement('meta')
         element.setAttribute(attribute, name)
         document.head.appendChild(element)
       }
-      
+
       element.setAttribute('content', content)
     }
-    
+
     updateMetaTag('description', description)
     updateMetaTag('og:title', title, true)
     updateMetaTag('og:description', description, true)
@@ -330,11 +371,11 @@ watch([personality, ganjiInfo, ganjiId], () => {
     updateMetaTag('twitter:title', title, true)
     updateMetaTag('twitter:description', description, true)
     updateMetaTag('twitter:image', ganjiImageUrl, true)
-    
+
     const currentUrl = window.location.href
     updateMetaTag('og:url', currentUrl, true)
     updateMetaTag('twitter:url', currentUrl, true)
-    
+
     // Canonical URL 업데이트
     let canonical = document.querySelector('link[rel="canonical"]')
     if (!canonical) {
@@ -357,41 +398,119 @@ watch([personality, ganjiInfo, ganjiId], () => {
     <div class="detail-content" v-if="!isLoadingData">
       <!-- 간지 제목 -->
       <h1 class="ganji-title">{{ personality?.title || ganjiInfo.coloredAnimal }}</h1>
-      
-      <!-- 한줄 소개 -->
-      <p class="ganji-intro">{{ personality?.intro || personality?.personality || '' }}</p>
+
+      <!-- 간지 키워드 -->
+      <p class="ganji-intro">{{ personality?.keyword || personality?.intro || '' }}</p>
 
       <!-- 캐릭터 이미지 -->
       <div class="character-image-wrapper">
-        <img :src="getImageUrl(ganjiId)" :alt="ganjiInfo.coloredAnimal" class="character-image" 
-             @error="handleImageError" />
+        <img :src="getImageUrl(ganjiId)" :alt="ganjiInfo.coloredAnimal" class="character-image"
+          @error="handleImageError" />
       </div>
 
-      <!-- 장점 해시태그 -->
-      <div class="hashtag-section">
-        <h3 class="hashtag-label">장점</h3>
-        <div class="hashtag-container">
-          <span v-for="(strength, index) in personality?.strengths" :key="index" class="hashtag hashtag-strength">
-            #{{ strength }}
-          </span>
+      <!-- 1. 요약 -->
+      <div class="info-card" v-if="personality?.summary">
+        <div class="card-header">
+          <span class="chapter-tag">요약</span>
         </div>
+        <p class="summary-text">{{ personality.summary }}</p>
       </div>
 
-      <!-- 개선점 해시태그 -->
-      <div class="hashtag-section">
-        <h3 class="hashtag-label">개선점</h3>
-        <div class="hashtag-container">
-          <span v-for="(weakness, index) in personality?.weaknesses" :key="index" class="hashtag hashtag-weakness">
-            #{{ weakness }}
-          </span>
+      <!-- 2. 핵심물상 -->
+      <div class="info-card" v-if="personality?.coreImageTitle || (personality?.coreImageItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">핵심물상</span>
+          <h3 class="card-main-title" v-if="personality?.coreImageTitle">{{ personality.coreImageTitle }}</h3>
         </div>
+       
+        <ul class="kv-list" v-if="(personality?.coreImageItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.coreImageItems" :key="'core-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
       </div>
 
-      <!-- 성격 특성 블릿 리스트 -->
-      <div class="traits-section">
-        <ul class="traits-list">
-          <li v-for="(trait, index) in personality?.traits" :key="index" class="trait-item">
-            {{ trait }}
+      <!-- 3. 성격적 특징 -->
+      <div class="info-card" v-if="personality?.personalityFeatureTitle || (personality?.personalityFeatureItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">성격적 특징</span>
+          <h3 class="card-main-title" v-if="personality?.personalityFeatureTitle">{{ personality.personalityFeatureTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.personalityFeatureItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.personalityFeatureItems" :key="'pf-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 4. 성격의 장점 -->
+      <div class="info-card" v-if="personality?.strengthTitle || (personality?.strengthItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">성격의 장점</span>
+          <h3 class="card-main-title" v-if="personality?.strengthTitle">{{ personality.strengthTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.strengthItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.strengthItems" :key="'st-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 5. 약점/보완점 -->
+      <div class="info-card" v-if="personality?.weaknessTitle || (personality?.weaknessItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">약점/보완점</span>
+          <h3 class="card-main-title" v-if="personality?.weaknessTitle">{{ personality.weaknessTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.weaknessItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.weaknessItems" :key="'wk-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 6. 직업 및 진로 -->
+      <div class="info-card" v-if="personality?.careerTraitTitle || (personality?.careerTraitItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">직업 및 진로</span>
+          <h3 class="card-main-title" v-if="personality?.careerTraitTitle">{{ personality.careerTraitTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.careerTraitItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.careerTraitItems" :key="'cr-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 7. 연애 및 애정성향 -->
+      <div class="info-card" v-if="personality?.loveTraitTitle || (personality?.loveTraitItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">연애 및 애정성향</span>
+          <h3 class="card-main-title" v-if="personality?.loveTraitTitle">{{ personality.loveTraitTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.loveTraitItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.loveTraitItems" :key="'lv-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 8. 재물운 및 현실감각 -->
+      <div class="info-card" v-if="personality?.wealthSenseTitle || (personality?.wealthSenseItems?.length || 0) > 0">
+        <div class="card-header">
+          <span class="chapter-tag">재물운 및 현실감각</span>
+          <h3 class="card-main-title" v-if="personality?.wealthSenseTitle">{{ personality.wealthSenseTitle }}</h3>
+        </div>
+        <ul class="kv-list" v-if="(personality?.wealthSenseItems?.length || 0) > 0">
+          <li v-for="(item, idx) in personality.wealthSenseItems" :key="'wh-'+idx" class="kv-item">
+            <strong v-if="item.keyword" class="kv-key">{{ item.keyword }}</strong>
+            <p class="kv-value">{{ item.description || item.keyword }}</p>
           </li>
         </ul>
       </div>
@@ -427,7 +546,7 @@ watch([personality, ganjiInfo, ganjiId], () => {
   min-height: 100vh;
   padding: 2rem clamp(1.5rem, 4vw, 5rem);
   background: #ffffff;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -465,7 +584,7 @@ watch([personality, ganjiInfo, ganjiId], () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 /* 간지 제목 */
@@ -499,8 +618,84 @@ watch([personality, ganjiInfo, ganjiId], () => {
 .character-image {
   width: 100%;
   height: auto;
-  max-width: 300px;
+  max-width: 250px;
   object-fit: contain;
+}
+
+/* 정보 카드 공통 스타일 */
+.info-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f5f5f5;
+}
+
+.card-header {
+  gap: 0.75rem;
+  border-bottom: 1px solid #f5f5f5;
+  padding: 1.5rem;
+}
+
+
+.chapter-tag {
+  background: rgba(255, 153, 164, 0.15);
+  color: #ff99a4;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.card-main-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ff99a4;
+  margin: 1rem 0 0 0;
+  line-height: 1.4;
+}
+
+/* 요약 섹션 */
+.summary-text {
+  font-size: 1rem;
+  color: rgba(54, 69, 79, 0.9);
+  line-height: 1.7;
+  margin: 0;
+  padding: 1.5rem;
+}
+
+/* 키워드-설명 리스트 */
+.kv-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  padding: 1.5rem;
+}
+
+.kv-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kv-key {
+  color:#36454f;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.kv-value {
+  color: rgba(54, 69, 79, 0.9);
+  line-height: 1.7;
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 /* 해시태그 섹션 */
@@ -651,6 +846,7 @@ watch([personality, ganjiInfo, ganjiId], () => {
     opacity: 0;
     transform: translateX(-50%) translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -659,7 +855,12 @@ watch([personality, ganjiInfo, ganjiId], () => {
 
 @media (max-width: 768px) {
   .detail-page {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .detail-content {
+    padding: 1rem;
+    gap: 1rem;
   }
 
   .detail-header {
@@ -678,6 +879,22 @@ watch([personality, ganjiInfo, ganjiId], () => {
     max-width: 250px;
   }
 
+  .info-card {
+    padding: 1rem;
+  }
+
+  .card-main-title {
+    font-size: 1.1rem;
+  }
+
+  .kv-key {
+    font-size: 0.95rem;
+  }
+
+  .kv-value {
+    font-size: 0.9rem;
+  }
+
   .hashtag {
     font-size: 0.85rem;
     padding: 0.4rem 0.8rem;
@@ -689,4 +906,3 @@ watch([personality, ganjiInfo, ganjiId], () => {
   }
 }
 </style>
-
