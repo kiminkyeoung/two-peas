@@ -333,8 +333,21 @@ const fetchPersonalityData = async () => {
 onMounted(() => {
   if (!ganjiId.value) {
     router.push('/result')
+    return
   }
   fetchPersonalityData()
+})
+
+// 라우트 파라미터 변경 감지 (직접 URL 접근 시)
+watch(() => route.params.id, (newId) => {
+  if (newId) {
+    const id = parseInt(newId)
+    if (id >= 1 && id <= 60) {
+      fetchPersonalityData()
+    } else {
+      router.push('/result')
+    }
+  }
 })
 
 // 메타 태그 동적 업데이트
