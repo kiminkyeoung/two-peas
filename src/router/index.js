@@ -91,7 +91,8 @@ const metaMap = {
   'richplan/billionCalc': {
     title: '1억 부자 계산기 - Two Peas',
     description: '현재 자본금, 매월 목표 저축 금액, 연 수익률을 입력하면 1억 달성 시기를 알려드립니다. 복리 계산으로 정확한 목표 달성 날짜를 확인해보세요.',
-    keywords: '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획'
+    keywords: '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획',
+    imageUrl: 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png'
   }
 }
 
@@ -174,6 +175,14 @@ router.beforeEach((to, from, next) => {
   const currentUrl = window.location.origin + to.path
   updateMetaTag('og:url', currentUrl, true)
   updateMetaTag('twitter:url', currentUrl, true)
+  
+  // OG Image 업데이트
+  if (to.meta.imageUrl) {
+    updateMetaTag('og:image', to.meta.imageUrl, true)
+    updateMetaTag('og:image:width', '1200', true)
+    updateMetaTag('og:image:height', '630', true)
+    updateMetaTag('twitter:image', to.meta.imageUrl, true)
+  }
   
   // Canonical URL 업데이트
   let canonical = document.querySelector('link[rel="canonical"]')
