@@ -106,6 +106,11 @@ const routesWithMeta = autoRoutes.map(route => {
   const metaKey = route.path.replace(/^\//, '')
   const meta = metaMap[metaKey]
   
+  // 디버깅: billionCalc 경로 확인
+  if (route.path.includes('billion') || metaKey.includes('billion')) {
+    console.log('billionCalc 라우트 메타 정보:', { routePath: route.path, metaKey, meta })
+  }
+  
   return {
     ...route,
     meta: meta || {
@@ -182,7 +187,19 @@ router.beforeEach((to, from, next) => {
     updateMetaTag('og:image:width', '1200', true)
     updateMetaTag('og:image:height', '630', true)
     updateMetaTag('twitter:image', to.meta.imageUrl, true)
+  } else {
+    // 기본 이미지 제거하지 않고 유지 (다른 페이지를 위해)
+    // 하지만 billionCalc 페이지의 경우 명시적으로 설정
+    if (to.path.includes('billionCalc')) {
+      updateMetaTag('og:image', 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png', true)
+      updateMetaTag('og:image:width', '1200', true)
+      updateMetaTag('og:image:height', '630', true)
+      updateMetaTag('twitter:image', 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png', true)
+    }
   }
+  
+  // OG Site Name 업데이트
+  updateMetaTag('og:site_name', siteName, true)
   
   // Canonical URL 업데이트
   let canonical = document.querySelector('link[rel="canonical"]')
@@ -192,6 +209,17 @@ router.beforeEach((to, from, next) => {
     document.head.appendChild(canonical)
   }
   canonical.setAttribute('href', currentUrl)
+  
+  // 디버깅: billionCalc 경로 확인
+  if (to.path.includes('billionCalc')) {
+    console.log('billionCalc 라우트 메타 정보:', {
+      path: to.path,
+      meta: to.meta,
+      title: document.title,
+      ogTitle: document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
+      ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute('content')
+    })
+  }
   
   next()
 })

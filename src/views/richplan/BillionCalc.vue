@@ -7,7 +7,7 @@ const currentCapital = ref(500)
 const targetCapital = ref(50)
 const annualReturn = ref(7)
 
-const result = ref<{ title: string; year: string; subtitle: string; investorType?: number } | null>(null)
+const result = ref<{ title: string; year?: string; subtitle: string; investorType?: number } | null>(null)
 const showReturnInfo = ref(false)
 
 const GOAL = 100000000;
@@ -131,6 +131,60 @@ const resetCalculation = () => {
   result.value = null
 }
 
+const shareResult = async () => {
+  if (!result.value || !result.value.investorType) return
+
+  const investorType = investorTypes[result.value.investorType - 1]
+  const shareText = `🎯 나의 투자자 타입: ${investorType.name}\n\n${result.value.title}\n${result.value.year}\n\n${investorType.description}\n\n1억 부자 계산기로 확인해보세요! 👉`
+  const shareUrl = 'https://twopeas.co.kr/richplan/billionCalc'
+
+  // Web Share API 지원 확인
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `나의 투자자 타입: ${investorType.name}`,
+        text: shareText,
+        url: shareUrl
+      })
+    } catch (err) {
+      // 사용자가 공유를 취소한 경우 무시
+      if ((err as Error).name !== 'AbortError') {
+        console.error('공유 실패:', err)
+        fallbackShare(shareText, shareUrl)
+      }
+    }
+  } else {
+    // Web Share API를 지원하지 않는 경우 클립보드 복사
+    fallbackShare(shareText, shareUrl)
+  }
+}
+
+const fallbackShare = async (text: string, url: string) => {
+  const fullText = `${text}\n${url}`
+  
+  try {
+    await navigator.clipboard.writeText(fullText)
+    alert('결과가 클립보드에 복사되었습니다! 📋\n원하는 곳에 붙여넣기 하세요.')
+  } catch (err) {
+    // 클립보드 API 실패 시 텍스트 영역 사용
+    const textarea = document.createElement('textarea')
+    textarea.value = fullText
+    textarea.style.position = 'fixed'
+    textarea.style.opacity = '0'
+    document.body.appendChild(textarea)
+    textarea.select()
+    
+    try {
+      document.execCommand('copy')
+      alert('결과가 클립보드에 복사되었습니다! 📋\n원하는 곳에 붙여넣기 하세요.')
+    } catch (err) {
+      alert('공유 기능을 사용할 수 없습니다. 브라우저를 확인해주세요.')
+    }
+    
+    document.body.removeChild(textarea)
+  }
+}
+
 const handleSubmit = () => {
   const current = Number(currentCapital.value) * 10000;
   const monthly = Number(targetCapital.value) * 10000;
@@ -232,11 +286,16 @@ onMounted(() => {
       </div>
       <div class="result-box">
         <p class="result-date" v-html="result.title"></p>
-        <h2 class="result-date-year">{{ result.year }}</h2>
+        <h2 class="result-date-year" v-if="result.year">{{ result.year }}</h2>
         <p class="result-daily-savings" v-if="result.subtitle">{{ result.subtitle }}</p>
-        <button @click="resetCalculation" class="reset-button">
-          다시 계산하기
-        </button>
+        <div class="button-group">
+          <button @click="resetCalculation" class="reset-button">
+            다시 계산하기
+          </button>
+          <button @click="shareResult" class="share-button">
+            결과 공유하기
+          </button>
+        </div>
       </div>
     </section>
     <section class="hero" v-else>
@@ -623,17 +682,31 @@ onMounted(() => {
   line-height: 1.6;
 }
 
-.reset-button {
+.button-group {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.reset-button,
+.share-button {
   border: none;
   border-radius: 999px;
   padding: 0.75rem 2rem;
   font-size: 1rem;
   font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex: 1;
+  min-width: 140px;
+}
+
+.reset-button {
   background: rgba(255, 255, 255, 0.9);
   color: var(--color-main-pink);
-  cursor: pointer;
   box-shadow: 0 4px 15px rgba(255, 153, 164, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 2px solid var(--color-main-pink);
 }
 
@@ -642,6 +715,18 @@ onMounted(() => {
   box-shadow: 0 6px 20px rgba(255, 153, 164, 0.3);
   background: var(--color-main-pink);
   color: #ffffff;
+}
+
+.share-button {
+  background: linear-gradient(135deg, var(--color-main-pink) 0%, #ffb6c5 70%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 153, 164, 0.3);
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 153, 164, 0.4);
+  background: linear-gradient(135deg, #ff8fa0 0%, var(--color-main-pink) 70%);
 }
 
 @media (max-width: 768px) {
@@ -682,6 +767,17 @@ onMounted(() => {
 
   .result-daily-savings {
     font-size: 0.9rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .reset-button,
+  .share-button {
+    width: 100%;
+    min-width: unset;
   }
 }
 </style>
