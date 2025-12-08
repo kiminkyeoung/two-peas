@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { setSeoMeta } from '@/utils/seo'
+import { ref } from 'vue'
 
 
 const currentCapital = ref(500)
@@ -244,28 +243,6 @@ const handleSubmit = () => {
     investorType: investorTypeId
   };
 };
-
-// SEO 메타 태그 설정
-onMounted(() => {
-  const pageUrl = 'https://twopeas.co.kr/richplan/billionCalc'
-  const pageTitle = '1억 부자 계산기 - Two Peas'
-  const pageDescription = '현재 자본금, 매월 목표 저축 금액, 연 수익률을 입력하면 1억 달성 시기를 알려드립니다. 복리 계산으로 정확한 목표 달성 날짜를 확인해보세요.'
-  const pageKeywords = '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획'
-  const imageUrl = 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png'
-
-  setSeoMeta({
-    title: pageTitle,
-    description: pageDescription,
-    keywords: pageKeywords,
-    url: pageUrl,
-    imageUrl: imageUrl,
-    siteName: 'Two Peas',
-    type: 'website',
-    twitterCard: 'summary_large_image',
-    imageWidth: '1200',
-    imageHeight: '630'
-  } as any)
-})
 
 </script>
 

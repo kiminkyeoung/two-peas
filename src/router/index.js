@@ -1,55 +1,41 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+const SITE_NAME = 'Two Peas'
+const IS_DEV = import.meta.env.DEV
+
 // views 폴더의 모든 Vue 파일을 자동으로 가져오기
 const modules = import.meta.glob('../views/**/*.vue', { eager: true })
 
-// 파일 경로를 라우트 경로로 변환하는 함수
+/**
+ * 파일 경로를 라우트 경로로 변환
+ * @param {string} filePath - 파일 경로 (예: '../views/richplan/BillionCalc.vue')
+ * @returns {string} 라우트 경로 (예: '/richplan/billionCalc')
+ */
 function getRoutePath(filePath) {
-  // ../views/ 제거
-  let path = filePath.replace('../views/', '')
-  // .vue 제거
-  path = path.replace(/\.vue$/, '')
+  const path = filePath
+    .replace('../views/', '')
+    .replace(/\.vue$/, '')
   
-  // 파일명을 camelCase 유지하거나 kebab-case로 변환 (선택 가능)
   const parts = path.split('/')
   const fileName = parts[parts.length - 1]
-  
-  // 첫 글자를 소문자로 변환 (camelCase 유지)
   const camelFileName = fileName.charAt(0).toLowerCase() + fileName.slice(1)
   parts[parts.length - 1] = camelFileName
   
-  // 경로 조합
   return '/' + parts.join('/')
 }
 
-// 파일명을 컴포넌트 이름으로 변환하는 함수
+/**
+ * 파일명을 컴포넌트 이름으로 변환
+ * @param {string} filePath - 파일 경로
+ * @returns {string} 컴포넌트 이름 (예: 'RichplanBillionCalc')
+ */
 function getRouteName(filePath) {
-  let name = filePath.replace('../views/', '').replace(/\.vue$/, '')
-  const parts = name.split('/')
-  // 각 부분을 PascalCase로 변환
-  return parts.map(part => {
-    // 첫 글자를 대문자로, 나머지는 소문자로
-    return part.charAt(0).toUpperCase() + part.slice(1).replace(/([A-Z])/g, '$1')
-  }).join('')
+  const name = filePath.replace('../views/', '').replace(/\.vue$/, '')
+  return name
+    .split('/')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1).replace(/([A-Z])/g, '$1'))
+    .join('')
 }
-
-// 자동 생성된 라우트들
-const autoRoutes = Object.keys(modules).map(filePath => {
-  const component = modules[filePath].default
-  const routePath = getRoutePath(filePath)
-  const routeName = getRouteName(filePath)
-  
-  // 디버깅용 로그
-  if (filePath.includes('billion') || filePath.includes('Billion')) {
-    console.log('라우트 생성:', { filePath, routePath, routeName, component })
-  }
-  
-  return {
-    path: routePath,
-    name: routeName,
-    component: component
-  }
-})
 
 // 특수 케이스: 수동으로 정의해야 하는 라우트들 (동적 파라미터, 특정 경로 등)
 const manualRoutes = [
@@ -73,148 +59,160 @@ const manualRoutes = [
       description: '일주의 상세한 성격 정보와 특징을 확인해보세요.',
       keywords: '일주 상세, 간지 성격, 일주 분석'
     }
+  },
+  {
+    path: '/coworker/txt',
+    name: 'CoworkerTxt',
+    component: () => import('../views/coworker/txt.vue'),
+    meta: {
+      title: '내 업무 도우미 (TXT → CSV) - Two Peas',
+      description: 'TXT 파일을 CSV 파일로 변환해드립니다.',
+      keywords: 'TXT → CSV, 변환, 텍스트 파일, CSV 파일'
+    }
+  },
+  {
+    path: '/richplan/billionCalc',
+    name: 'RichplanBillionCalc',
+    component: () => import('../views/richplan/BillionCalc.vue'),
+    meta: {
+      title: '1억 부자 계산기 - Two Peas',
+      description: '현재 자본금, 매월 목표 저축 금액, 연 수익률을 입력하면 1억 달성 시기를 알려드립니다. 복리 계산으로 정확한 목표 달성 날짜를 확인해보세요.',
+      keywords: '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획',
+      imageUrl: 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png'
+    }
   }
 ]
 
-// 메타 정보 매핑 (파일 경로 기반)
-const metaMap = {
+// 자동 생성된 라우트들에 대한 메타 정보 매핑 (수동 라우트 제외)
+const autoRouteMetaMap = {
   'result': {
     title: '60일주 동물 도감 - Two Peas',
     description: '60가지 일주 동물을 모두 확인해보세요. 각 일주의 특징과 성격을 알아볼 수 있습니다.',
     keywords: '60일주, 일주 동물, 간지 도감, 사주 동물'
-  },
-  'coworker/txt': {
-    title: '내 업무 도우미 (TXT → CSV) - Two Peas',
-    description: 'TXT 파일을 CSV 파일로 변환해드립니다.',
-    keywords: 'TXT → CSV, 변환, 텍스트 파일, CSV 파일'
-  },
-  'richplan/billionCalc': {
-    title: '1억 부자 계산기 - Two Peas',
-    description: '현재 자본금, 매월 목표 저축 금액, 연 수익률을 입력하면 1억 달성 시기를 알려드립니다. 복리 계산으로 정확한 목표 달성 날짜를 확인해보세요.',
-    keywords: '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획',
-    imageUrl: 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png'
   }
 }
 
-// 자동 라우트에 메타 정보 추가
-const routesWithMeta = autoRoutes.map(route => {
-  // 수동 라우트와 경로가 겹치지 않는 경우만 처리
-  const isManualRoute = manualRoutes.some(mr => mr.path === route.path || mr.name === route.name)
-  if (isManualRoute) return null
-  
-  // 메타 정보 찾기
-  const metaKey = route.path.replace(/^\//, '')
-  const meta = metaMap[metaKey]
-  
-  // 디버깅: billionCalc 경로 확인
-  if (route.path.includes('billion') || metaKey.includes('billion')) {
-    console.log('billionCalc 라우트 메타 정보:', { routePath: route.path, metaKey, meta })
-  }
-  
-  return {
-    ...route,
-    meta: meta || {
-      title: `${route.name} - Two Peas`,
-      description: '',
-      keywords: ''
+// 자동 생성된 라우트들
+const manualRoutePaths = new Set(manualRoutes.map(r => r.path))
+const manualRouteNames = new Set(manualRoutes.map(r => r.name))
+
+const autoRoutes = Object.keys(modules)
+  .map(filePath => {
+    const component = modules[filePath].default
+    const routePath = getRoutePath(filePath)
+    const routeName = getRouteName(filePath)
+    
+    // 수동 라우트와 겹치지 않는 경우만 처리
+    if (manualRoutePaths.has(routePath) || manualRouteNames.has(routeName)) {
+      return null
     }
-  }
-}).filter(Boolean)
+    
+    // 메타 정보 찾기
+    const metaKey = routePath.replace(/^\//, '')
+    const meta = autoRouteMetaMap[metaKey]
+    
+    return {
+      path: routePath,
+      name: routeName,
+      component: component,
+      meta: meta || {
+        title: `${routeName} - ${SITE_NAME}`,
+        description: '',
+        keywords: ''
+      }
+    }
+  })
+  .filter(Boolean)
 
 // 최종 라우트: 수동 라우트 + 자동 라우트
-const routes = [...manualRoutes, ...routesWithMeta]
+const routes = [...manualRoutes, ...autoRoutes]
 
-// 디버깅: 생성된 라우트 확인
-console.log('생성된 라우트 목록:', routes.map(r => ({ path: r.path, name: r.name })))
+if (IS_DEV) {
+  console.log('생성된 라우트 목록:', routes.map(r => ({ path: r.path, name: r.name })))
+}
 
 const router = createRouter({
   history: createWebHistory(),
   routes
 })
 
-// 페이지별 메타 태그 동적 업데이트
-router.beforeEach((to, from, next) => {
-  // 기본 사이트명
-  const siteName = 'Two Peas'
+/**
+ * 메타 태그를 업데이트하거나 생성하는 헬퍼 함수
+ * @param {string} name - 메타 태그 이름 또는 속성
+ * @param {string} content - 메타 태그 내용
+ * @param {boolean} isProperty - property 속성 사용 여부 (기본값: false, name 속성 사용)
+ */
+function updateMetaTag(name, content, isProperty = false) {
+  const attribute = isProperty ? 'property' : 'name'
+  let element = document.querySelector(`meta[${attribute}="${name}"]`)
   
-  // 페이지별 타이틀 설정
-  if (to.meta.title) {
-    document.title = to.meta.title
-  } else {
-    document.title = siteName
+  if (!element) {
+    element = document.createElement('meta')
+    element.setAttribute(attribute, name)
+    document.head.appendChild(element)
   }
   
-  // 메타 태그 업데이트 함수
-  const updateMetaTag = (name, content, isProperty = false) => {
-    const attribute = isProperty ? 'property' : 'name'
-    let element = document.querySelector(`meta[${attribute}="${name}"]`)
-    
-    if (!element) {
-      element = document.createElement('meta')
-      element.setAttribute(attribute, name)
-      document.head.appendChild(element)
-    }
-    
-    element.setAttribute('content', content)
-  }
-  
-  // Description 업데이트
-  if (to.meta.description) {
-    updateMetaTag('description', to.meta.description)
-    updateMetaTag('og:description', to.meta.description, true)
-    updateMetaTag('twitter:description', to.meta.description, true)
-  }
-  
-  // Keywords 업데이트
-  if (to.meta.keywords) {
-    updateMetaTag('keywords', to.meta.keywords)
-  }
-  
-  // OG Title 업데이트
-  if (to.meta.title) {
-    updateMetaTag('og:title', to.meta.title, true)
-    updateMetaTag('twitter:title', to.meta.title, true)
-  }
-  
-  // OG URL 업데이트
-  const currentUrl = window.location.origin + to.path
-  updateMetaTag('og:url', currentUrl, true)
-  updateMetaTag('twitter:url', currentUrl, true)
-  
-  // OG Image 업데이트
-  if (to.meta.imageUrl) {
-    updateMetaTag('og:image', to.meta.imageUrl, true)
-    updateMetaTag('og:image:width', '1200', true)
-    updateMetaTag('og:image:height', '630', true)
-    updateMetaTag('twitter:image', to.meta.imageUrl, true)
-  } else {
-    // 기본 이미지 제거하지 않고 유지 (다른 페이지를 위해)
-    // 하지만 billionCalc 페이지의 경우 명시적으로 설정
-    if (to.path.includes('billionCalc')) {
-      updateMetaTag('og:image', 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png', true)
-      updateMetaTag('og:image:width', '1200', true)
-      updateMetaTag('og:image:height', '630', true)
-      updateMetaTag('twitter:image', 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png', true)
-    }
-  }
-  
-  // OG Site Name 업데이트
-  updateMetaTag('og:site_name', siteName, true)
-  
-  // Canonical URL 업데이트
+  element.setAttribute('content', content)
+}
+
+/**
+ * Canonical URL을 업데이트하는 헬퍼 함수
+ * @param {string} url - Canonical URL
+ */
+function updateCanonical(url) {
   let canonical = document.querySelector('link[rel="canonical"]')
   if (!canonical) {
     canonical = document.createElement('link')
     canonical.setAttribute('rel', 'canonical')
     document.head.appendChild(canonical)
   }
-  canonical.setAttribute('href', currentUrl)
+  canonical.setAttribute('href', url)
+}
+
+// 페이지별 메타 태그 동적 업데이트
+router.beforeEach((to, from, next) => {
+  const currentUrl = window.location.origin + to.path
+  const meta = to.meta || {}
   
-  // 디버깅: billionCalc 경로 확인
-  if (to.path.includes('billionCalc')) {
+  // 페이지 타이틀 설정
+  document.title = meta.title || SITE_NAME
+  
+  // Primary Meta Tags
+  if (meta.description) {
+    updateMetaTag('description', meta.description)
+    updateMetaTag('og:description', meta.description, true)
+    updateMetaTag('twitter:description', meta.description, true)
+  }
+  
+  if (meta.keywords) {
+    updateMetaTag('keywords', meta.keywords)
+  }
+  
+  // Open Graph / Facebook / Twitter
+  if (meta.title) {
+    updateMetaTag('og:title', meta.title, true)
+    updateMetaTag('twitter:title', meta.title, true)
+  }
+  
+  updateMetaTag('og:url', currentUrl, true)
+  updateMetaTag('twitter:url', currentUrl, true)
+  updateMetaTag('og:site_name', SITE_NAME, true)
+  
+  // OG Image 업데이트
+  if (meta.imageUrl) {
+    updateMetaTag('og:image', meta.imageUrl, true)
+    updateMetaTag('og:image:width', '1200', true)
+    updateMetaTag('og:image:height', '630', true)
+    updateMetaTag('twitter:image', meta.imageUrl, true)
+  }
+  
+  // Canonical URL 업데이트
+  updateCanonical(currentUrl)
+  
+  if (IS_DEV && to.path.includes('billionCalc')) {
     console.log('billionCalc 라우트 메타 정보:', {
       path: to.path,
-      meta: to.meta,
+      meta: meta,
       title: document.title,
       ogTitle: document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
       ogImage: document.querySelector('meta[property="og:image"]')?.getAttribute('content')
