@@ -175,9 +175,12 @@ router.beforeEach((to, from, next) => {
   const meta = to.meta || {}
   
   // 페이지 타이틀 설정
-  document.title = meta.title || SITE_NAME
+  const pageTitle = meta.title || SITE_NAME
+  document.title = pageTitle
   
   // Primary Meta Tags
+  updateMetaTag('title', pageTitle)
+  
   if (meta.description) {
     updateMetaTag('description', meta.description)
     updateMetaTag('og:description', meta.description, true)
@@ -198,13 +201,12 @@ router.beforeEach((to, from, next) => {
   updateMetaTag('twitter:url', currentUrl, true)
   updateMetaTag('og:site_name', SITE_NAME, true)
   
-  // OG Image 업데이트
-  if (meta.imageUrl) {
-    updateMetaTag('og:image', meta.imageUrl, true)
-    updateMetaTag('og:image:width', '1200', true)
-    updateMetaTag('og:image:height', '630', true)
-    updateMetaTag('twitter:image', meta.imageUrl, true)
-  }
+  // OG Image 업데이트 (항상 업데이트하여 초기 HTML의 기본 이미지 덮어쓰기)
+  const ogImage = meta.imageUrl || 'https://twopeas.co.kr/intro.webp'
+  updateMetaTag('og:image', ogImage, true)
+  updateMetaTag('og:image:width', '1200', true)
+  updateMetaTag('og:image:height', '630', true)
+  updateMetaTag('twitter:image', ogImage, true)
   
   // Canonical URL 업데이트
   updateCanonical(currentUrl)

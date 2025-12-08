@@ -261,84 +261,7 @@ const handleSubmit = () => {
 </template>
 
 <style scoped>
-:root {
-  --color-main-pink: #ffc0cb;
-  --color-background-primary: #fffff0;
-  --color-accent: #add8e6;
-  --color-text-primary: #4e3629;
-  --color-soft-lavender: #d8d9ff;
-  --color-card-shadow: rgba(255, 153, 164, 0.45);
-}
-
-.palette-modern {
-  --color-main-pink: #ff99a4;
-  --color-background-primary: #ffffff;
-  --color-accent: #ffd700;
-  --color-text-primary: #36454f;
-  --color-soft-lavender: #f2e7ff;
-  --color-card-shadow: rgba(255, 153, 164, 0.35);
-}
-
-.center {
-  text-align: center;
-}
-.landing {
-  display: grid;
-  gap: 3rem;
-  padding: 4rem clamp(1.5rem, 4vw, 5rem);
-  min-height: 100vh;
-  align-items: center;
-  background-color: var(--color-background-primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.landing::before,
-.landing::after {
-  content: '';
-  position: absolute;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(255, 153, 164, 0.33) 0%, rgba(255, 153, 164, 0) 70%);
-  filter: blur(8px);
-  z-index: 0;
-}
-
-.landing::before {
-  top: -80px;
-  left: -120px;
-}
-
-.landing::after {
-  bottom: -120px;
-  right: -140px;
-}
-
-.hero {
-  position: relative;
-  z-index: 1;
-}
-
-.hero__intro {
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.hero__title {
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
-  line-height: 1.1;
-  font-weight: 800;
-  margin: 0 0 1rem;
-  color: var(--color-text-primary);
-}
-
-.hero__subtitle {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(54, 69, 79, 0.8);
-  margin-bottom: 2.5rem;
-}
-
+/* Home.vue 고유 스타일 */
 .image-slider-wrapper {
   position: relative;
   width: 300px;
@@ -360,72 +283,6 @@ const handleSubmit = () => {
 
 .slider-image.fade-out {
   opacity: 0;
-}
-
-.birth-form {
-  max-width: 520px;
-  display: grid;
-  gap: 1.5rem;
-  justify-self: center;
-  background: rgba(255, 244, 248, 0.85);
-  border-radius: 28px;
-  padding: 2rem clamp(1.5rem, 4vw, 2.5rem);
-  box-shadow: 0 30px 70px rgba(255, 153, 164, 0.18);
-  backdrop-filter: blur(10px);
-}
-
-.field-group {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.field-label {
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.toggle-group {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.toggle-button {
-  border: none;
-  padding: 0.65rem 1.3rem;
-  border-radius: 999px;
-  background: rgba(255, 153, 164, 0.18);
-  color: var(--color-text-primary);
-  font-weight: 600;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.toggle-button:hover {
-  background: rgba(255, 153, 164, 0.3);
-}
-
-.toggle-button--active {
-  background: var(--color-main-pink);
-  color: #ffffff;
-  box-shadow: 0 10px 25px rgba(255, 153, 164, 0.3);
-}
-
-.input-control {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border-radius: 16px;
-  border: 1px solid rgba(54, 69, 79, 0.1);
-  background: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.input-control:focus {
-  outline: none;
-  border-color: var(--color-main-pink);
-  box-shadow: 0 0 0 4px rgba(255, 153, 164, 0.15);
 }
 
 .time-row {
@@ -457,39 +314,7 @@ const handleSubmit = () => {
   accent-color: var(--color-main-pink);
 }
 
-.cta-button {
-  border: none;
-  border-radius: 999px;
-  padding: 0.9rem 2.4rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--color-main-pink) 0%, #ffb6c5 70%);
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0 20px 35px rgba(255, 153, 164, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 26px 40px rgba(255, 153, 164, 0.45);
-}
-
 @media (max-width: 768px) {
-  .hero__title {
-    text-align: center;
-  }
-
-  .hero__intro,
-  .birth-form {
-    text-align: center;
-  }
-
-  .toggle-group,
-  .time-row {
-    justify-content: center;
-  }
-
   .image-slider-wrapper {
     width: 250px;
     height: 250px;

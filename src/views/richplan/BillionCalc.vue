@@ -339,175 +339,7 @@ const handleSubmit = () => {
 </template>
 
 <style scoped>
-:root {
-  --color-main-pink: #ffc0cb;
-  --color-background-primary: #fffff0;
-  --color-accent: #add8e6;
-  --color-text-primary: #4e3629;
-  --color-soft-lavender: #d8d9ff;
-  --color-card-shadow: rgba(255, 153, 164, 0.45);
-}
-
-.palette-modern {
-  --color-main-pink: #ff99a4;
-  --color-background-primary: #ffffff;
-  --color-accent: #ffd700;
-  --color-text-primary: #36454f;
-  --color-soft-lavender: #f2e7ff;
-  --color-card-shadow: rgba(255, 153, 164, 0.35);
-}
-
-.center {
-  text-align: center;
-}
-
-.landing {
-  display: grid;
-  gap: 3rem;
-  padding: 4rem clamp(1.5rem, 4vw, 5rem);
-  min-height: 100vh;
-  align-items: center;
-  background-color: var(--color-background-primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.landing::before,
-.landing::after {
-  content: '';
-  position: absolute;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(255, 153, 164, 0.33) 0%, rgba(255, 153, 164, 0) 70%);
-  filter: blur(8px);
-  z-index: 0;
-}
-
-.landing::before {
-  top: -80px;
-  left: -120px;
-}
-
-.landing::after {
-  bottom: -120px;
-  right: -140px;
-}
-
-.hero {
-  position: relative;
-  z-index: 1;
-}
-
-.hero__intro {
-  max-width: 520px;
-  margin: 0 auto;
-}
-
-.hero__title {
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
-  line-height: 1.1;
-  font-weight: 800;
-  margin: 0 0 1rem;
-  color: var(--color-text-primary);
-}
-
-.hero__image {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  margin: 0 auto 2rem;
-  display: block;
-  object-fit: contain;
-}
-
-.hero__subtitle {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  color: rgba(54, 69, 79, 0.8);
-  margin-bottom: 2.5rem;
-}
-
-.calc-form {
-  max-width: 520px;
-  display: grid;
-  gap: 1.5rem;
-  justify-self: center;
-  background: rgba(255, 244, 248, 0.85);
-  border-radius: 28px;
-  padding: 2rem clamp(1.5rem, 4vw, 2.5rem);
-  box-shadow: 0 30px 70px rgba(255, 153, 164, 0.18);
-  backdrop-filter: blur(10px);
-}
-
-.field-group {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.field-label {
-  font-weight: 600;
-  color: var(--color-text-primary);
-}
-
-.field-label-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.info-icon-button {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s ease;
-  opacity: 0.7;
-  position: relative;
-}
-
-.info-icon-button:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.tooltip-text {
-  position: absolute;
-  bottom: 100%;
-  right: 0;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  background: rgba(54, 69, 79, 0.95);
-  color: #ffffff;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  border-radius: 8px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-  pointer-events: none;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.tooltip-text::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 1rem;
-  border: 6px solid transparent;
-  border-top-color: rgba(54, 69, 79, 0.95);
-}
-
-.info-icon-button:hover .tooltip-text {
-  opacity: 1;
-  visibility: visible;
-}
-
+/* BillionCalc.vue 고유 스타일 */
 .return-info-box {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
@@ -553,57 +385,6 @@ const handleSubmit = () => {
   color: #ef4444;
 }
 
-.input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.input-control {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  padding-right: 3.5rem;
-  border-radius: 16px;
-  border: 1px solid rgba(54, 69, 79, 0.1);
-  background: #ffffff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  font-size: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.input-unit {
-  position: absolute;
-  right: 1rem;
-  color: rgba(54, 69, 79, 0.6);
-  font-size: 1rem;
-  pointer-events: none;
-  user-select: none;
-}
-
-.input-control:focus {
-  outline: none;
-  border-color: var(--color-main-pink);
-  box-shadow: 0 0 0 4px rgba(255, 153, 164, 0.15);
-}
-
-.cta-button {
-  border: none;
-  border-radius: 999px;
-  padding: 0.9rem 2.4rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--color-main-pink) 0%, #ffb6c5 70%);
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0 20px 35px rgba(255, 153, 164, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cta-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 26px 40px rgba(255, 153, 164, 0.45);
-}
-
 .result-box {
   max-width: 550px;
   margin: 2rem auto 0;
@@ -627,7 +408,6 @@ const handleSubmit = () => {
   margin: 0;
   line-height: 1.2;
 }
-
 
 .result-subtitle {
   font-size: 1.1rem;
@@ -659,67 +439,7 @@ const handleSubmit = () => {
   line-height: 1.6;
 }
 
-.button-group {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-}
-
-.reset-button,
-.share-button {
-  border: none;
-  border-radius: 999px;
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex: 1;
-  min-width: 140px;
-}
-
-.reset-button {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--color-main-pink);
-  box-shadow: 0 4px 15px rgba(255, 153, 164, 0.2);
-  border: 2px solid var(--color-main-pink);
-}
-
-.reset-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 153, 164, 0.3);
-  background: var(--color-main-pink);
-  color: #ffffff;
-}
-
-.share-button {
-  background: linear-gradient(135deg, var(--color-main-pink) 0%, #ffb6c5 70%);
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 153, 164, 0.3);
-}
-
-.share-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 153, 164, 0.4);
-  background: linear-gradient(135deg, #ff8fa0 0%, var(--color-main-pink) 70%);
-}
-
 @media (max-width: 768px) {
-  .hero__title {
-    text-align: center;
-  }
-
-  .hero__intro,
-  .birth-form {
-    text-align: center;
-  }
-
-  .hero__image {
-    max-width: 300px;
-  }
-
   .result-title {
     font-size: 1.4rem;
   }
@@ -744,17 +464,6 @@ const handleSubmit = () => {
 
   .result-daily-savings {
     font-size: 0.9rem;
-  }
-
-  .button-group {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .reset-button,
-  .share-button {
-    width: 100%;
-    min-width: unset;
   }
 }
 </style>

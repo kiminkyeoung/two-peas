@@ -137,6 +137,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* Result.vue 고유 스타일 */
 .result-page {
   min-height: 100vh;
   padding: 2rem clamp(1.5rem, 4vw, 5rem);
@@ -153,19 +154,6 @@ onMounted(() => {
   position: absolute;
   top: 2rem;
   left: clamp(1.5rem, 4vw, 5rem);
-  background: rgba(255, 153, 164, 0.2);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.back-button:hover {
-  background: rgba(255, 153, 164, 0.35);
-  transform: translateX(-3px);
 }
 
 .result-title {

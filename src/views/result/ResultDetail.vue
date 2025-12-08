@@ -555,6 +555,7 @@ watch([personality, ganjiInfo, ganjiId], () => {
 </template>
 
 <style scoped>
+/* ResultDetail.vue 고유 스타일 */
 .detail-page {
   min-height: 100vh;
   padding: 2rem clamp(1.5rem, 4vw, 5rem);
@@ -570,29 +571,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   justify-content: space-between;
 }
 
-.back-button,
-.home-button {
-  background: rgba(255, 153, 164, 0.2);
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.back-button:hover,
-.home-button:hover {
-  background: rgba(255, 153, 164, 0.35);
-  transform: translateX(-3px);
-}
-
-.home-button:hover {
-  transform: translateX(3px);
-}
-
 .detail-content {
   display: flex;
   flex-direction: column;
@@ -600,7 +578,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   gap: 1.5rem;
 }
 
-/* 간지 제목 */
 .ganji-title {
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 800;
@@ -610,7 +587,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   line-height: 1.2;
 }
 
-/* 한줄 소개 */
 .ganji-intro {
   font-size: 1.1rem;
   color: #36454f;
@@ -619,7 +595,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   line-height: 1.6;
 }
 
-/* 캐릭터 이미지 */
 .character-image-wrapper {
   width: 100%;
   max-width: 400px;
@@ -635,41 +610,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   object-fit: contain;
 }
 
-/* 정보 카드 공통 스타일 */
-.info-card {
-  width: 100%;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f5f5f5;
-}
-
-.card-header {
-  gap: 0.75rem;
-  border-bottom: 1px solid #f5f5f5;
-  padding: 1.5rem;
-}
-
-
-.chapter-tag {
-  background: rgba(255, 153, 164, 0.15);
-  color: #ff99a4;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.card-main-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #ff99a4;
-  margin: 1rem 0 0 0;
-  line-height: 1.4;
-}
-
-/* 요약 섹션 */
 .summary-text {
   font-size: 1rem;
   color: rgba(54, 69, 79, 0.9);
@@ -678,40 +618,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   padding: 1.5rem;
 }
 
-/* 키워드-설명 리스트 */
-.kv-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-
-  padding: 1.5rem;
-}
-
-.kv-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.kv-key {
-  color:#36454f;
-  font-weight: 800;
-  font-size: 1rem;
-  line-height: 1.4;
-  margin: 0;
-}
-
-.kv-value {
-  color: rgba(54, 69, 79, 0.9);
-  line-height: 1.7;
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-/* 해시태그 섹션 */
 .hashtag-section {
   width: 100%;
   display: flex;
@@ -750,7 +656,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   color: #e74c3c;
 }
 
-/* 성격 특성 블릿 리스트 */
 .traits-section {
   width: 100%;
   margin-top: 1rem;
@@ -782,14 +687,12 @@ watch([personality, ganjiInfo, ganjiId], () => {
   font-size: 1.2rem;
 }
 
-/* 로딩 상태 */
 .loading-state {
   text-align: center;
   padding: 3rem;
   color: #36454f;
 }
 
-/* 에러 메시지 */
 .error-message {
   background: rgba(231, 76, 60, 0.1);
   color: #e74c3c;
@@ -798,7 +701,6 @@ watch([personality, ganjiInfo, ganjiId], () => {
   text-align: center;
 }
 
-/* 공유하기 버튼 */
 .share-section {
   width: 100%;
   margin-top: 2rem;
@@ -806,31 +708,15 @@ watch([personality, ganjiInfo, ganjiId], () => {
   border-top: 1px solid rgba(54, 69, 79, 0.1);
 }
 
-.share-button {
+.share-section .share-button {
   width: 100%;
-  background: linear-gradient(135deg, #ff99a4 0%, #ffb6c5 100%);
-  border: none;
   border-radius: 16px;
   padding: 1rem 2rem;
   font-size: 1.1rem;
-  font-weight: 700;
-  color: #ffffff;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 153, 164, 0.3);
-}
-
-.share-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 153, 164, 0.4);
-}
-
-.share-button:active {
-  transform: translateY(0);
 }
 
 .share-icon {
