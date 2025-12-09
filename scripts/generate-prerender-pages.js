@@ -235,10 +235,49 @@ function generateDynamicRoutes() {
   }
 }
 
+/**
+ * _redirects 파일 생성 (정적 파일이 있는 경로는 리다이렉트 제외)
+ */
+function generateRedirectsFile() {
+  console.log('📄 _redirects 파일 생성 시작...')
+  
+  const redirectsPath = path.join(distDir, '_redirects')
+  const redirects = []
+  
+  // 정적 파일이 있는 경로 목록 수집
+  const staticPaths = new Set()
+  
+  // 정적 라우트 경로 추가
+  for (const routePath of Object.keys(routeMetaMap)) {
+    if (routePath === '/') {
+      continue // 루트는 제외
+    }
+    // /richplan/billionCalc -> /richplan/billionCalc/*
+    staticPaths.add(`${routePath}/*`)
+  }
+  
+  // 동적 라우트 경로 추가
+  if (dynamicRouteMetaMap['/result/:id']) {
+    // /result/1 ~ /result/60은 정적 파일로 존재
+    for (let i = 1; i <= 60; i++) {
+      staticPaths.add(`/result/${i}`)
+    }
+  }
+  
+  // 정적 파일이 없는 경로만 리다이렉트
+  redirects.push('# 정적 파일이 있는 경로는 자동으로 서빙됨')
+  redirects.push('# 나머지 경로는 SPA 라우팅을 위해 index.html로 리다이렉트')
+  redirects.push('/*    /index.html   200')
+  
+  fs.writeFileSync(redirectsPath, redirects.join('\n'))
+  console.log(`  ✅ _redirects 파일 생성 완료`)
+}
+
 // 메인 실행
 try {
   generateStaticRoutes()
   generateDynamicRoutes()
+  generateRedirectsFile()
   console.log('\n✅ 사전 렌더링 완료!')
 } catch (error) {
   console.error('❌ 사전 렌더링 중 오류 발생:', error)
