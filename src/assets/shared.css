@@ -92,7 +92,8 @@
 /* 공통 폼 스타일 */
 .birth-form,
 .calc-form {
-  max-width: 520px;
+  max-width: 550px;
+  width: 100%;
   display: grid;
   gap: 1.5rem;
   justify-self: center;
@@ -311,6 +312,10 @@
   display: flex;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.toggle-group label.toggle-button input {
+  display: none;
 }
 
 .toggle-button {

@@ -80,6 +80,17 @@ const manualRoutes = [
       keywords: '1억 부자, 자본금 계산, 목표 달성, 재테크 계산기, 복리 계산, 저축 계산기, 부자 되기, 재무 계획',
       imageUrl: 'https://twopeas.co.kr/richplan/rich-gril-thumnail.png'
     }
+  },
+  {
+    path: '/richplan/loanCalc',
+    name: 'RichplanLoanCalc',
+    component: () => import('../views/richplan/loanCalc.vue'),
+    meta: {
+      title: '대출 상환 계산기 - 원리금균등, 원금균등, 만기일시상환 - Two Peas',
+      description: '대출 원금, 이자율, 상환 기간을 입력하면 원리금균등상환, 원금균등상환, 만기일시상환 방식별로 월별 상환액과 총 이자를 계산해드립니다. 차트로 상환 추세를 한눈에 확인하세요.',
+      keywords: '대출 계산기, 대출 상환 계산, 원리금균등상환, 원금균등상환, 만기일시상환, 대출 이자 계산, 주택담보대출 계산, 대출 상환액, 월 상환액 계산, 대출 비교',
+      imageUrl: 'https://twopeas.co.kr/richplan/loan-thumnail.png'
+    }
   }
 ]
 
