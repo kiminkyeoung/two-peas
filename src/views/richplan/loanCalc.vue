@@ -91,6 +91,57 @@
   const koreanAmount = computed(() => {
     return formatToKoreanCurrency(Number(loanAmount.value))
   })
+
+  // 숫자에 쉼표 추가하는 함수
+  const formatNumberWithCommas = (num: number | string): string => {
+    if (!num && num !== 0) return ''
+    const numStr = String(num).replace(/,/g, '')
+    if (numStr === '') return ''
+    return Number(numStr).toLocaleString('ko-KR')
+  }
+
+  // 쉼표 제거하고 숫자만 반환하는 함수
+  const removeCommas = (str: string): string => {
+    return str.replace(/,/g, '')
+  }
+
+  // 대출 원금 입력값 포맷팅 (표시용)
+  const loanAmountDisplay = computed({
+    get: () => formatNumberWithCommas(loanAmount.value),
+    set: (value: string) => {
+      // 숫자와 쉼표만 허용
+      const cleaned = value.replace(/[^0-9,]/g, '')
+      const numValue = removeCommas(cleaned)
+      if (numValue === '') {
+        loanAmount.value = 0
+      } else {
+        const num = Number(numValue)
+        if (!isNaN(num) && num >= 0) {
+          loanAmount.value = num
+        }
+      }
+    }
+  })
+
+  // 입력 시 숫자만 허용하는 핸들러
+  const handleLoanAmountInput = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    const value = target.value
+    // 숫자와 쉼표만 허용
+    const cleaned = value.replace(/[^0-9,]/g, '')
+    const numValue = removeCommas(cleaned)
+    
+    if (numValue === '') {
+      loanAmount.value = 0
+      target.value = ''
+    } else {
+      const num = Number(numValue)
+      if (!isNaN(num) && num >= 0) {
+        loanAmount.value = num
+        target.value = formatNumberWithCommas(num)
+      }
+    }
+  }
   
   // 상환 방식별 계산 로직
   const calculateLoan = () => {
@@ -808,7 +859,16 @@
             <span class="field-label">💰 대출 원금</span>
             <div class="input-wrapper">
               <span class="korean-amount-text" v-if="koreanAmount">{{ koreanAmount }}</span>
-              <input v-model="loanAmount" type="number" class="input-control" :class="{ 'has-korean-text': koreanAmount }" required />
+              <input 
+                :value="loanAmountDisplay" 
+                @input="handleLoanAmountInput" 
+                type="text" 
+                inputmode="numeric" 
+                pattern="[0-9,]*" 
+                class="input-control" 
+                :class="{ 'has-korean-text': koreanAmount }" 
+                required 
+              />
               <span class="input-unit">원</span>
             </div>
           </div>
