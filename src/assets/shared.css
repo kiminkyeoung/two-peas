@@ -34,6 +34,17 @@
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .landing {
+    display: block; /* 모바일에서 grid 레이아웃 해제 */
+    width: 100%; /* 전체 너비 차지 */
+    padding: 2rem clamp(1rem, 4vw, 1.5rem); /* 모바일 패딩 조정 */
+    overflow: visible; /* 자식 요소의 스크롤을 허용하기 위해 overflow:hidden 해제 */
+    min-height: auto; /* 콘텐츠 높이에 따라 유동적으로 */
+    gap: 2rem; /* 간격 조정 */
+  }
+}
+
 .landing::before,
 .landing::after {
   content: '';
@@ -130,7 +141,7 @@
 .input-control {
   width: 100%;
   padding: 0.75rem 1rem;
-  padding-right: 3.5rem;
+  padding-right: 2.5rem;
   border-radius: 16px;
   border: 1px solid rgba(54, 69, 79, 0.1);
   background: #ffffff;

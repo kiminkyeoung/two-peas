@@ -1320,75 +1320,166 @@
   }
 
   /* 반응형 디자인 */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
+    .result-box {
+      width: 100%; /* 모바일에서 전체 너비 사용 */
+      padding: 1rem;
+    }
+
+    .result-title {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .result-subtitle {
+      font-size: 0.95rem;
+      padding: 0 0.5rem;
+    }
+
+    .result-summary {
+      grid-template-columns: 1fr; /* 세로로 스택 */
+      gap: 0.8rem;
+    }
+
     .result-card {
       flex-direction: column;
       text-align: center;
-      padding: 1.2rem;
+      padding: 1rem;
+      gap: 0.8rem;
     }
 
     .result-card-icon {
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       font-size: 1.5rem;
-    }
-
-    .result-number {
-      font-size: 1.3rem;
-    }
-
-    .result-card-primary .result-number {
-      font-size: 1.4rem;
     }
 
     .result-card-value {
       align-items: center;
     }
 
-    .result-summary {
-      gap: 0.8rem;
+    .result-number {
+      font-size: 1.2rem;
     }
 
-    .monthly-table-container {
-      padding: 15px;
-      margin: 20px 0;
+    .result-card-primary .result-number {
+      font-size: 1.3rem;
     }
 
-    .table-title {
-      font-size: 1.1rem;
-      margin-bottom: 15px;
+    .korean-amount {
+      font-size: 0.8rem;
     }
 
-    .monthly-table {
+    .calc-form {
+      padding: 1rem;
+    }
+
+    .field-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .input-control {
+      width: 100%;
+      box-sizing: border-box;
+      text-align: right;
+    }
+
+    .input-unit {
+      width: 100%;
+      text-align: right;
+    }
+
+    .quick-select-buttons {
+      flex-wrap: wrap;
+    }
+
+    .quick-select-btn {
+      flex-basis: calc(50% - 0.25rem);
+      padding: 0.4rem 0.8rem;
       font-size: 0.85rem;
+    }
+
+    /* 차트 */
+    .repayment-chart {
+      height: 300px; /* 차트 높이 조정 */
+    }
+
+    /* 테이블 */
+    .monthly-table {
+      font-size: 0.8rem; /* 테이블 글자 크기 작게 */
     }
 
     .monthly-table th,
     .monthly-table td {
-      padding: 0.7rem 0.5rem;
+      padding: 0.6rem 0.4rem; /* 테이블 셀 패딩 조정 */
+    }
+
+    .monthly-table thead th {
+      font-size: 0.75rem;
+    }
+
+    .monthly-table td.monthly-payment-cell {
+      font-size: 0.85rem;
+    }
+    
+    /* 툴팁 */
+    .method-label-with-tooltip .tooltip-text {
+      width: 90%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .chart-tooltip {
+      transform: translate(-50%, -100%); /* 중앙 유지 */
+      left: 50%;
     }
   }
 
   @media (max-width: 480px) {
-    .result-title {
+    .hero__intro h1 {
       font-size: 1.8rem;
-      margin-bottom: 20px;
+    }
+    .hero__subtitle {
+      font-size: 0.9rem;
     }
 
-    .result-card {
-      padding: 1rem;
-    }
-
-    .result-number {
-      font-size: 1.1rem;
-    }
-
-    .result-card-primary .result-number {
+    .result-card-icon {
+      width: 40px;
+      height: 40px;
       font-size: 1.2rem;
     }
 
-    .korean-amount {
-      font-size: 0.85rem;
+    .result-number {
+      font-size: 1rem;
+    }
+
+    .result-card-primary .result-number {
+      font-size: 1.1rem;
+    }
+
+    .korean-amount-text {
+      font-size: 0.8rem;
+      max-width: 6rem;
+    }
+
+    .input-control.has-korean-text {
+      padding-left: 7rem !important;
+    }
+
+    .chart-container {
+      padding: 15px;
+    }
+    .chart-title {
+      font-size: 1.1rem;
+    }
+    .repayment-chart {
+      height: 250px;
     }
   }
   </style>

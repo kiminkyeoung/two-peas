@@ -44,6 +44,16 @@ const manualRoutes = [
     name: 'Home',
     component: () => import('../views/Home.vue'),
     meta: {
+      title: 'Twopeace - 사주, 계산기, 그리고 즐거움',
+      description: 'Twopeace에 오신 것을 환영합니다! 내 일주 동물 찾기, 재테크 계산기 등 삶에 유용한 정보와 즐거움을 더해주는 다양한 서비스를 만나보세요.',
+      keywords: 'twopeace, 사주, 만세력, 계산기, 재테크'
+    }
+  },
+  {
+    path: '/ganji/find-my-animal',
+    name: 'GanjiFindMyAnimal',
+    component: () => import('../views/ganji/FindMyAnimal.vue'),
+    meta: {
       title: '나의 일주 동물 찾기 - Two Peas',
       description: '생년월일을 입력하면 나만의 일주 동물을 찾아드립니다. 60가지 간지 동물 중 당신의 일주를 확인해보세요.',
       keywords: '일주 동물, 사주, 만세력, 간지, 60간지, 일주 찾기'
@@ -56,7 +66,7 @@ const manualRoutes = [
     props: true,
     meta: {
       title: '일주 상세 정보 - Two Peas',
-      description: '일주의 상세한 성격 정보와 특징을 확인해보세요.',
+      description: '나만의 일주 동물에 대한 상세한 성격 정보와 특징을 확인해보세요.',
       keywords: '일주 상세, 간지 성격, 일주 분석'
     }
   },
@@ -90,6 +100,77 @@ const manualRoutes = [
       description: '대출 원금, 이자율, 상환 기간을 입력하면 원리금균등상환, 원금균등상환, 만기일시상환 방식별로 월별 상환액과 총 이자를 계산해드립니다. 차트로 상환 추세를 한눈에 확인하세요.',
       keywords: '대출 계산기, 대출 상환 계산, 원리금균등상환, 원금균등상환, 만기일시상환, 대출 이자 계산, 주택담보대출 계산, 대출 상환액, 월 상환액 계산, 대출 비교',
       imageUrl: 'https://twopeas.co.kr/richplan/loan-thumnail.png'
+    }
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/About.vue'),
+    meta: {
+      title: 'Twopeace를 소개합니다',
+      description: 'Twopeace는 유용한 계산기와 재미로 보는 사주 정보를 제공하여 당신의 삶에 작은 평화와 즐거움을 더해드립니다.',
+      keywords: 'twopeace, 소개, about, 사주, 계산기'
+    }
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: () => import('../views/PrivacyPolicy.vue'),
+    meta: {
+      title: '개인정보처리방침 - Twopeace',
+      description: 'Twopeace의 개인정보처리방침입니다. 우리는 사용자의 어떤 정보도 수집하거나 저장하지 않습니다.',
+      keywords: '개인정보처리방침, privacy policy, twopeace'
+    }
+  },
+  {
+    path: '/what-is-ilju-animal',
+    name: 'WhatIsIljuAnimal',
+    component: () => import('../views/ganji/WhatIsIljuAnimal.vue'),
+    meta: {
+      title: '일주 동물이란? - Twopeace',
+      description: '나를 상징하는 진짜 동물, 일주 동물에 대해 알아보세요. 사주와 일주, 60간지의 개념을 쉽게 설명해드립니다.',
+      keywords: '일주동물, 일주, 사주, 60간지, 간지, 사주팔자'
+    }
+  },
+  {
+    path: '/sinsal/analysis',
+    name: 'ShinsalAnalysis',
+    component: () => import('../views/sinsal/ShinsalAnalysis.vue'),
+    meta: {
+      title: '내 사주 속 신살 분석 - Twopeace',
+      description: '생년월일을 통해 당신의 사주 속 숨겨진 신살을 분석해드립니다.',
+      keywords: '신살, 사주, 운명, 분석'
+    }
+  },
+  {
+    path: '/sinsal/result',
+    name: 'ShinsalResult',
+    component: () => import('../views/sinsal/ShinsalResult.vue'),
+    meta: {
+      title: '신살 분석 결과 - Twopeace',
+      description: '당신의 사주 속 신살 분석 결과를 확인하세요.',
+      keywords: '신살 결과, 사주 분석, 운명 해석'
+    }
+  },
+  {
+    path: '/blog',
+    name: 'BlogList',
+    component: () => import('../views/blog/BlogList.vue'),
+    meta: {
+      title: 'Twopeace 블로그 - 사주, 재테크 이야기',
+      description: 'Twopeace 블로그에서 사주, 만세력, 재테크 관련 흥미로운 글들을 만나보세요.',
+      keywords: '블로그, 사주, 재테크, 만세력, 신살'
+    }
+  },
+  {
+    path: '/blog/:slug',
+    name: 'ArticleDetail',
+    component: () => import('../views/blog/ArticleDetail.vue'),
+    props: true,
+    meta: {
+      title: 'Twopeace 블로그 - 아티클 상세',
+      description: 'Twopeace 블로그의 흥미로운 아티클 상세 내용을 확인하세요. 사주, 만세력, 재테크 관련 깊이 있는 정보들을 만나보세요.',
+      keywords: '블로그, 아티클, 사주, 재테크, 만세력, 신살'
     }
   }
 ]
@@ -153,7 +234,7 @@ const router = createRouter({
  * @param {string} content - 메타 태그 내용
  * @param {boolean} isProperty - property 속성 사용 여부 (기본값: false, name 속성 사용)
  */
-function updateMetaTag(name, content, isProperty = false) {
+export function updateMetaTag(name, content, isProperty = false) {
   const attribute = isProperty ? 'property' : 'name'
   let element = document.querySelector(`meta[${attribute}="${name}"]`)
   
@@ -170,7 +251,7 @@ function updateMetaTag(name, content, isProperty = false) {
  * Canonical URL을 업데이트하는 헬퍼 함수
  * @param {string} url - Canonical URL
  */
-function updateCanonical(url) {
+export function updateCanonical(url) {
   let canonical = document.querySelector('link[rel="canonical"]')
   if (!canonical) {
     canonical = document.createElement('link')

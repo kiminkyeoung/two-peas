@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "name": "푸른 살",
+    "category": "일반",
+    "attribute": "물",
+    "source": "바다",
+    "description": "푸른색을 띠는 살"
+  },
+  {
+    "id": 2,
+    "name": "붉은 살",
+    "category": "일반",
+    "attribute": "불",
+    "source": "화산",
+    "description": "붉은색을 띠는 살"
+  },
+  {
+    "id": 3,
+    "name": "노란 살",
+    "category": "일반",
+    "attribute": "땅",
+    "source": "평원",
+    "description": "노란색을 띠는 살"
+  },
+  {
+    "id": 4,
+    "name": "하얀 살",
+    "category": "일반",
+    "attribute": "바람",
+    "source": "하늘",
+    "description": "하얀색을 띠는 살"
+  },
+  {
+    "id": 5,
+    "name": "검은 살",
+    "category": "일반",
+    "attribute": "어둠",
+    "source": "동굴",
+    "description": "검은색을 띠는 살"
+  },
+  {
+    "id": 6,
+    "name": "무지개 살",
+    "category": "희귀",
+    "attribute": "복합",
+    "source": "무지개 동산",
+    "description": "일곱 빛깔을 띠는 살"
+  },
+  {
+    "id": 7,
+    "name": "황금 살",
+    "category": "전설",
+    "attribute": "빛",
+    "source": "황금 사원",
+    "description": "황금색을 띠는 살"
+  },
+  {
+    "id": 8,
+    "name": "은빛 살",
+    "category": "전설",
+    "attribute": "달",
+    "source": "은빛 호수",
+    "description": "은빛을 띠는 살"
+  },
+  {
+    "id": 9,
+    "name": "별똥별 살",
+    "category": "전설",
+    "attribute": "별",
+    "source": "별똥별 언덕",
+    "description": "별똥별처럼 빛나는 살"
+  },
+  {
+    "id": 10,
+    "name": "태양 살",
+    "category": "전설",
+    "attribute": "태양",
+    "source": "태양의 제단",
+    "description": "태양처럼 뜨거운 살"
+  },
+  {
+    "id": 11,
+    "name": "달빛 살",
+    "category": "전설",
+    "attribute": "달",
+    "source": "달빛 숲",
+    "description": "달빛처럼 차가운 살"
+  },
+  {
+    "id": 12,
+    "name": "천둥 살",
+    "category": "전설",
+    "attribute": "번개",
+    "source": "천둥 산",
+    "description": "천둥처럼 강력한 살"
+  },
+  {
+    "id": 13,
+    "name": "바람 살",
+    "category": "전설",
+    "attribute": "바람",
+    "source": "바람의 계곡",
+    "description": "바람처럼 빠른 살"
+  },
+  {
+    "id": 14,
+    "name": "대지 살",
+    "category": "전설",
+    "attribute": "땅",
+    "source": "대지의 심장",
+    "description": "대지처럼 굳건한 살"
+  },
+  {
+    "id": 15,
+    "name": "화염 살",
+    "category": "전설",
+    "attribute": "불",
+    "source": "화염의 동굴",
+    "description": "화염처럼 뜨거운 살"
+  },
+  {
+    "id": 16,
+    "name": "빙하 살",
+    "category": "전설",
+    "attribute": "얼음",
+    "source": "빙하의 봉우리",
+    "description": "빙하처럼 차가운 살"
+  },
+  {
+    "id": 17,
+    "name": "독액 살",
+    "category": "전설",
+    "attribute": "독",
+    "source": "독의 늪",
+    "description": "독액을 뿜는 살"
+  },
+  {
+    "id": 18,
+    "name": "환영 살",
+    "category": "전설",
+    "attribute": "환영",
+    "source": "환영의 숲",
+    "description": "환영을 보여주는 살"
+  },
+  {
+    "id": 19,
+    "name": "시간 살",
+    "category": "전설",
+    "attribute": "시간",
+    "source": "시간의 사원",
+    "description": "시간을 조종하는 살"
+  },
+  {
+    "id": 20,
+    "name": "공간 살",
+    "category": "전설",
+    "attribute": "공간",
+    "source": "공간의 틈새",
+    "description": "공간을 이동하는 살"
+  }
+]
