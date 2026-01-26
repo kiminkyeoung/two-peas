@@ -219,9 +219,6 @@ const autoRoutes = Object.keys(modules)
 // 최종 라우트: 수동 라우트 + 자동 라우트
 const routes = [...manualRoutes, ...autoRoutes]
 
-if (IS_DEV) {
-  console.log('생성된 라우트 목록:', routes.map(r => ({ path: r.path, name: r.name })))
-}
 
 const router = createRouter({
   history: createWebHistory(),
