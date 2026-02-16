@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { getSajuPillars, checkSinsal } from '@/utils/sinsalLogic'
 
 const router = useRouter()
 

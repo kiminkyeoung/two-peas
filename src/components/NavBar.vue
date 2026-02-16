@@ -24,7 +24,7 @@
           <ul class="dropdown-menu" v-if="showIljuDropdown">
             <li @click="closeMobileMenu"><router-link to="/what-is-ilju-animal">일주 동물이란?</router-link></li>
             <li @click="closeMobileMenu"><router-link to="/ganji/find-my-animal">내 일주 동물 찾기</router-link></li>
-            <!-- <li><router-link to="/sinsal/analysis">내 사주 속 신살 분석</router-link></li> -->
+            <li @click="closeMobileMenu"><router-link to="/sinsal/analysis">내 사주 속 신살 분석</router-link></li>
           </ul>
         </li>
         <li class="nav-item has-dropdown" @mouseover="showFinanceDropdown = true" @mouseleave="showFinanceDropdown = false" :class="{ 'dropdown-open': showFinanceDropdown }">

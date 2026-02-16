@@ -32,13 +32,13 @@ const handleSubmit = () => {
   try {
     // 1. 사주 데이터 추출
     const sajuData = getSajuPillars(birthDate.value, hour, minute, selectedCalendar.value);
-    
+
     if (!sajuData) throw new Error("사주 데이터 산출 불가");
 
     const foundSals = checkSinsal(sajuData);
 
     const result = {
-      saju: sajuData, 
+      saju: sajuData,
       sals: foundSals,
       inputInfo: {
         date: birthDate.value,
@@ -46,7 +46,7 @@ const handleSubmit = () => {
         type: selectedCalendar.value
       }
     };
-    
+
     sessionStorage.setItem('sinsalResult', JSON.stringify(result));
     router.push(`/sinsal/result`);
   } catch (error) {
@@ -63,11 +63,11 @@ const handleSubmit = () => {
 
       <div class="hero__intro center">
 
-        <h1 class="hero__title">내 사주 속 신살(神煞) 분석</h1>
+        <h1 class="hero__title">내 사주 속 신살 분석</h1>
 
         <p class="hero__subtitle">
 
-          타고난 사주에 어떤 신살이 있는지 확인해보세요.<br/>생년월일시를 입력하면 신살을 분석해드립니다.
+          타고난 사주에 어떤 신살이 있는지 확인해보세요.<br />생년월일시를 입력하면 신살을 분석해드립니다.
 
         </p>
 
@@ -83,21 +83,8 @@ const handleSubmit = () => {
 
           <div class="toggle-group">
 
-            <button
-
-              v-for="option in calendarOptions"
-
-              :key="option"
-
-              type="button"
-
-              class="toggle-button"
-
-              :class="{ 'toggle-button--active': selectedCalendar === option }"
-
-              @click="setCalendar(option)"
-
-            >
+            <button v-for="option in calendarOptions" :key="option" type="button" class="toggle-button"
+              :class="{ 'toggle-button--active': selectedCalendar === option }" @click="setCalendar(option)">
 
               {{ option }}
 
@@ -113,15 +100,8 @@ const handleSubmit = () => {
 
           <label class="field-label" for="birth-date">생년월일</label>
 
-          <input
-            id="birth-date"
-            v-model="birthDate"
-            type="text"
-            pattern="[0-9]*"
-            placeholder="20250101"
-            class="input-control"
-            required
-          />
+          <input id="birth-date" v-model="birthDate" type="text" pattern="[0-9]*" placeholder="20250101"
+            class="input-control" required />
 
         </div>
 
@@ -133,17 +113,7 @@ const handleSubmit = () => {
 
           <div class="time-row">
 
-            <select
-
-              v-model="birthHour"
-
-              class="input-control time-select"
-
-              :disabled="isTimeUnknown"
-
-              required
-
-            >
+            <select v-model="birthHour" class="input-control time-select" :disabled="isTimeUnknown" required>
 
               <option value="" disabled>시</option>
 
@@ -153,17 +123,7 @@ const handleSubmit = () => {
 
 
 
-            <select
-
-              v-model="birthMinute"
-
-              class="input-control time-select"
-
-              :disabled="isTimeUnknown"
-
-              required
-
-            >
+            <select v-model="birthMinute" class="input-control time-select" :disabled="isTimeUnknown" required>
 
               <option value="" disabled>분</option>
 
@@ -200,7 +160,6 @@ const handleSubmit = () => {
 
 
 <style scoped>
-
 .time-row {
 
   display: flex;
@@ -256,5 +215,4 @@ const handleSubmit = () => {
   accent-color: var(--color-main-pink);
 
 }
-
 </style>

@@ -137,6 +137,10 @@ const goHome = () => {
   router.push('/')
 }
 
+const goAnalyzeAgain = () => {
+  router.push('/ganji/find-my-animal')
+}
+
 const getImageUrl = (id) => {
   try {
     // Vite에서 동적 import 사용
@@ -534,6 +538,10 @@ watch([personality, ganjiInfo, ganjiId], () => {
           <span class="share-icon">🔗</span>
           결과 공유하기
         </button>
+        <div class="bottom-action-buttons">
+          <button @click="goAnalyzeAgain" class="back-button">← 다시 분석하기</button>
+          <button @click="goBack" class="home-button">목록으로</button>
+        </div>
       </div>
     </div>
 
@@ -706,6 +714,23 @@ watch([personality, ganjiInfo, ganjiId], () => {
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid rgba(54, 69, 79, 0.1);
+}
+
+.bottom-action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.bottom-action-buttons .back-button,
+.bottom-action-buttons .home-button {
+  width: auto;
+  min-width: 140px;
+  justify-content: center;
 }
 
 .share-section .share-button {
